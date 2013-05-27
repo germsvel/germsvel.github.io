@@ -92,6 +92,11 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+a{
+    text-decoration: none;
+    color: #1E81B6;
+    background-color: inherit;
+}
 
 .header {
 -webkit-font-smoothing: antialiased;
@@ -149,6 +154,18 @@ text-shadow: 0 -1px 0 #014163;
     border: none;
 }
 
+#social-media-btns img {
+    opacity: .8;
+}
+
+#social-media-btns a img:hover {
+    opacity: 1;
+    -webkit-box-shadow: 0;
+    box-shadow: 0;
+    border: 0;
+    text-shadow: 0;
+}
+
 #gv-cartoon {
     float: right;
     height: 137%;
@@ -159,11 +176,6 @@ text-shadow: 0 -1px 0 #014163;
     left: 36px;
 }
 
-a{
-    text-decoration: none;
-    color: #1E81B6;
-    background-color: inherit;
-}
 
 div.introduction {
     width: 80%;
@@ -172,6 +184,11 @@ div.introduction {
     margin-right: auto;
 }
 
+
+
+/* ==========================================================================
+   Author's media queries
+   ========================================================================== */
 
 @media only screen and (max-width: 646px) {
     .header h1 {
@@ -221,6 +238,11 @@ div.introduction {
     #gv-cartoon {
         height: 95%;
         bottom: -47px;
+    }
+
+    #social-media-btns img {
+        height: 22px;
+        width: 22px;
     }
     
 
