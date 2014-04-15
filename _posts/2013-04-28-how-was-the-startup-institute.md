@@ -2,7 +2,7 @@
 layout: post
 title:  "So, how was the Startup Institute's program?"
 date:   2013-04-28 17:14:14
-categories: sib
+categories: blog
 ---
 
 I could give you some facts like the number of tracks there are, the schedule we followed, who came to teach, etc. But I think it is much more interesting to tell you what I got out of it, what I experienced, what I took with me.

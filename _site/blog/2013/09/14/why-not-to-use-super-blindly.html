@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Why not to use super blindly</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- boostrap highlighting -->
+        <link rel="stylesheet" href="/css/bootstrap.css">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-42626537-1', 'germanvelasco.com');
+      ga('send', 'pageview');
+
+    </script>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+
+              <img id="gv-cartoon" src="images/gv_sib_cartoon.png" alt="German cartoon">
+              <h1 class="title"><a href="/">German Velasco</a></h1>
+              <a class="extra" href="/">Web Developer</a>
+
+              <span id="social-media-btns">
+                <!-- <a class="social-media-btn" href="http://germsvel.tumblr.com" target="_blank" title="German's tumblr"><img src="images/glyphicons_388_tumblr.png"></a> -->
+                <a class="social-media-btn" href="http://twitter.com/germsvel" target="_blank" title="German's twitter"><img src="images/glyphicons_411_twitter.png"></a>
+                <a class="social-media-btn" href="http://github.com/germsvel" target="_blank" title="German's github repo"><img src="images/glyphicons_401_github.png"></a>
+                <a class="social-media-btn" href="http://www.linkedin.com/pub/german-velasco/40/188/702/" target="_blank" title="German's LinkedIn"><img src="images/glyphicons_397_linked_in.png"></a>
+              </span>
+
+              <!-- <br/>
+              <a href="/about" title="About">About me</a> -->
+            </div>
+
+                <h2>Why not to use super blindly</h2>
+<p class="meta">14 Sep 2013</p>
+
+<div id="post">
+<p>Lately I have read and heard a lot of people talk about using <code>super</code> to extend behavior instead of using callbacks in Rails. The complaint is that callbacks are hard to test and often violate the simple responsibility principle. Finally, I have heard it said that “super is more OOPish”. I don’t believe that to be wholly true. Let me explain why.</p>
+
+<p>For those who do not know what <code>super</code> does or what callbacks are, let’s look at an example to clarify how they work. Suppose you want to do something right after you save some data to a database. Well, in Rails we can use an <code>after_save</code> callback:</p>
+<div class='highlight'><pre><code class='ruby'>    <span class='k'>class</span> <span class='nc'>YourClass</span> <span class='o'>&lt;</span> <span class='no'>ActiveRecord</span><span class='o'>::</span><span class='no'>Base</span>
+      <span class='n'>after_save</span> <span class='ss'>:do_something</span>
+
+      <span class='k'>def</span> <span class='nf'>do_something</span>
+        <span class='c1'># do something after saving</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+</code></pre></div>
+<p>Using <code>super</code>, on the other hand, passes the message up through the superclass chain. This way, we can get the behavior described in the superclass and we can add some behavior of our own:</p>
+<div class='highlight'><pre><code class='ruby'>    <span class='k'>class</span> <span class='nc'>YourClass</span> <span class='o'>&lt;</span> <span class='no'>ActiveRecord</span><span class='o'>::</span><span class='no'>Base</span>
+      <span class='k'>def</span> <span class='nf'>save</span>
+        <span class='k'>super</span>
+        <span class='c1'># do something after saving</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+</code></pre></div>
+<p>Now I want to make a quick side point. I am not saying that using <code>super</code> is never a good idea. Much wiser and knowledgeable developers recommend it, and I am sure there’s a good reason for that and a good time to use it. But as a somewhat new, and definitely junior, Ruby developer it is easy to grab ahold of rules of thumb and use them everywhere. It is easy because rules of thumb give you something concrete, something you can hold on to and apply with confidence. But as experience teaches, there is no silver bullet. And that is why new developers have to take these rules with caution.</p>
+
+<p>Back to the main point. I mentioned above that people think callbacks are really hard to test and that they are “less OOPish” than <code>super</code>. I think those two statements are actually related and one the cause of the other. Callbacks are hard to test when the design of your application is not very object-oriented. So it is not the callbacks but the design of your application that is making your application hard to test. If your callback is creating dependencies with other classes, then you are violating the single responsibility principle, and your design is at fault. The callback is merely doing what it is meant to do.</p>
+
+<p>In such a case, I think regardless of whether you are using a callback or <code>super</code>, you need to extract that method to a different class. For example,</p>
+<div class='highlight'><pre><code class='ruby'>    <span class='k'>class</span> <span class='nc'>Cat</span> <span class='o'>&lt;</span> <span class='no'>Mammal</span>
+      <span class='n'>after_save</span><span class='p'>:</span> <span class='n'>send_reminder_to_feed</span>
+
+      <span class='k'>def</span> <span class='nf'>send_reminder_to_feed</span>
+        <span class='c1'># send an email reminder to owner</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+</code></pre></div>
+<p>as well as,</p>
+<div class='highlight'><pre><code class='ruby'>    <span class='k'>class</span> <span class='nc'>Cat</span> <span class='o'>&lt;</span> <span class='no'>Mammal</span>
+
+      <span class='k'>def</span> <span class='nf'>save</span>
+        <span class='c1'>#send email reminder</span>
+        <span class='k'>super</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+</code></pre></div>
+<p>both need to factor out <code>send_email_reminder</code> to a different class. It is clearly not the responsibility of Cat to know that.</p>
+
+<p>Ok, so you might say, what about the case where the behavior does not violate the single responsibility principle? Which should we use?</p>
+
+<p>Well, if we are talking about callbacks in Rails ActiveRecord models, I believe the only correct use for them is when their logic refers to the internal state of the object. In particular, <code>after_save</code> and <code>after_create</code> callbacks should only be used when their logic deals with persistence. That is the responsibility of ActiveRecord models in Rails, so that is what they should dedicate themselves to.</p>
+
+<p>Alright, so if an ActiveRecord callback does not deal with the internal state of the object, it is probably violating the single responsibility principle and should be extracted. If it is dealing with the internal state of the object and persistence logic, then we can use it. But what about when we have our own classical inheritance structure with some other classes? We are likely not dealing with persistence logic. What’s wrong with using super then?</p>
+
+<p>Well, let’s look at an example. Football is our superclass from which Association Football inherits behavior. In the U.S. this type of Football is more commonly known as soccer. We’ll call <code>super</code> in our initialize method to get the initialize behavior from Football:</p>
+<div class='highlight'><pre><code class='ruby'>    <span class='k'>class</span> <span class='nc'>Football</span>
+      <span class='kp'>attr_reader</span> <span class='ss'>:ball</span>
+
+      <span class='k'>def</span> <span class='nf'>initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
+          <span class='vi'>@ball</span> <span class='o'>=</span> <span class='n'>args</span><span class='o'>[</span><span class='ss'>:ball</span><span class='o'>]</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+
+    <span class='k'>class</span> <span class='nc'>AssociationFootball</span> <span class='o'>&lt;</span> <span class='no'>Football</span>
+      <span class='kp'>attr_reader</span> <span class='ss'>:keeper</span>
+
+      <span class='k'>def</span> <span class='nf'>initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
+          <span class='vi'>@keeper</span> <span class='o'>=</span> <span class='n'>args</span><span class='o'>[</span><span class='ss'>:keeper</span><span class='o'>]</span>
+          <span class='k'>super</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+</code></pre></div>
+<p>What’s wrong with the code above is that even though our AssociationFootball class inherits the behavior we desire, our subclass knows not only about itself but also about its parent class. Any knowledge that a class has regarding another class creates dependencies, even if that other class is its parent class.</p>
+
+<p>Our AssociationFootball class not only does it now know <em>how</em> to implement the initialization method of Football but it also knows <em>when</em> it needs to be implemented. We want to get rid of this coupling. In addition, when we, or some other developers in the future, want to add more subclasses, they must now know they have to call <code>super</code> from the subclass.</p>
+
+<p>Say we add an American Football (known simply as football in the U.S.) class and we forget to use <code>super</code>. An object from the class below will be instantiated without throwing an error.</p>
+<div class='highlight'><pre><code class='ruby'>     <span class='k'>class</span> <span class='nc'>AmericanFootball</span> <span class='o'>&lt;</span> <span class='no'>Football</span>
+      <span class='kp'>attr_reader</span> <span class='ss'>:kicker</span>
+
+      <span class='k'>def</span> <span class='nf'>initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
+          <span class='vi'>@kicker</span> <span class='o'>=</span> <span class='n'>args</span><span class='o'>[</span><span class='ss'>:kicker</span><span class='o'>]</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+</code></pre></div>
+<p>In fact, we won’t get an error until we are using a method that is making use of <code>ball</code>, which was defined in the Football superclass.</p>
+
+<p>The better alternative is to send hook messages. In the example below we use ‘post_initialize’ instead of using ‘super’. This still lets the subclasses define what gets implemented, but they no longer have to know <em>when</em> it gets implemented or how the superclass implements it.</p>
+<div class='highlight'><pre><code class='ruby'>    <span class='k'>class</span> <span class='nc'>Football</span>
+      <span class='kp'>attr_reader</span> <span class='ss'>:ball</span>
+
+      <span class='k'>def</span> <span class='nf'>initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
+         <span class='vi'>@ball</span> <span class='o'>=</span> <span class='n'>args</span><span class='o'>[</span><span class='ss'>:ball</span><span class='o'>]</span>
+         <span class='n'>post_initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
+      <span class='k'>end</span>
+
+      <span class='k'>def</span> <span class='nf'>post_initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
+        <span class='kp'>nil</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+
+    <span class='k'>class</span> <span class='nc'>AssociationFootball</span> <span class='o'>&lt;</span> <span class='no'>Football</span>
+      <span class='kp'>attr_reader</span> <span class='ss'>:keeper</span>
+
+      <span class='k'>def</span> <span class='nf'>post_initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
+          <span class='vi'>@keeper</span> <span class='o'>=</span> <span class='n'>args</span><span class='o'>[</span><span class='ss'>:keeper</span><span class='o'>]</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+
+     <span class='k'>class</span> <span class='nc'>AmericanFootball</span> <span class='o'>&lt;</span> <span class='no'>Football</span>
+      <span class='kp'>attr_reader</span> <span class='ss'>:kicker</span>
+
+      <span class='k'>def</span> <span class='nf'>post_initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
+          <span class='vi'>@kicker</span> <span class='o'>=</span> <span class='n'>args</span><span class='o'>[</span><span class='ss'>:kicker</span><span class='o'>]</span>
+      <span class='k'>end</span>
+    <span class='k'>end</span>
+</code></pre></div>
+<p>I believe this to be a much better solution. Our classes are less coupled. The subclasses do not need to know how or when the initialize is implemented. In fact, they do not even need to know who is calling the method. All our subclasses know is that they receive a message for ‘post_intialize’ with some arguments and that they can implement it.</p>
+
+<p>So although I know that testing callbacks is difficult when they are violating the single responsibility principle, I do not recommend blindly using <code>super</code> either. I think we ought to use callbacks when they relate to the object in question and Rails <code>after_save</code> and <code>after_create</code> callbacks only when dealing with persistence logic. If you use classical inheritance, and the superclass is not ActiveRecord (or some other class of which you are not the owner), send hook messages instead and hide the knowledge of how and when to implement behavior from your subclasses.</p>
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>

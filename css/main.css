@@ -184,6 +184,13 @@ div.introduction {
     margin-right: auto;
 }
 
+div.posts {
+    width: 80%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 
 
 /* ==========================================================================
@@ -212,7 +219,7 @@ div.introduction {
         font-size: 40px;
     }
 
-    h1.title { 
+    h1.title {
        padding-top: 40px;
     }
 
@@ -231,7 +238,7 @@ div.introduction {
         font-size: 32px;
     }
 
-    h1.title { 
+    h1.title {
        padding-top: 53px;
     }
 
@@ -244,7 +251,7 @@ div.introduction {
         height: 22px;
         width: 22px;
     }
-    
+
 
 }
 
@@ -258,7 +265,7 @@ div.introduction {
         font-size: 26px;
     }
 
-     h1.title { 
+     h1.title {
        padding-top: 46px;
     }
 
