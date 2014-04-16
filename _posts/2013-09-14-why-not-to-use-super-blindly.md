@@ -10,6 +10,7 @@ Lately I have read and heard a lot of people talk about using `super` to extend 
 For those who do not know what `super` does or what callbacks are, let's look at an example to clarify how they work. Suppose you want to do something right after you save some data to a database. Well, in Rails we can use an `after_save` callback:
 
 {% highlight ruby %}
+
     class YourClass < ActiveRecord::Base
       after_save :do_something
 
@@ -17,15 +18,20 @@ For those who do not know what `super` does or what callbacks are, let's look at
         # do something after saving
       end
     end
+
 {% endhighlight %}
+
 Using `super`, on the other hand, passes the message up through the superclass chain. This way, we can get the behavior described in the superclass and we can add some behavior of our own:
+
 {% highlight ruby %}
+
     class YourClass < ActiveRecord::Base
       def save
         super
         # do something after saving
       end
     end
+
 {% endhighlight %}
 
 Now I want to make a quick side point. I am not saying that using `super` is never a good idea. Much wiser and knowledgeable developers recommend it, and I am sure there's a good reason for that and a good time to use it. But as a somewhat new, and definitely junior, Ruby developer it is easy to grab ahold of rules of thumb and use them everywhere. It is easy because rules of thumb give you something concrete, something you can hold on to and apply with confidence. But as experience teaches, there is no silver bullet. And that is why new developers have to take these rules with caution.
@@ -35,6 +41,7 @@ Back to the main point. I mentioned above that people think callbacks are really
 In such a case, I think regardless of whether you are using a callback or `super`, you need to extract that method to a different class. For example,
 
 {% highlight ruby %}
+
     class Cat < Mammal
       after_save: send_reminder_to_feed
 
@@ -42,10 +49,13 @@ In such a case, I think regardless of whether you are using a callback or `super
         # send an email reminder to owner
       end
     end
+
 {% endhighlight %}
 
 as well as,
+
 {% highlight ruby %}
+
     class Cat < Mammal
 
       def save
@@ -53,7 +63,9 @@ as well as,
         super
       end
     end
+
 {% endhighlight %}
+
 both need to factor out `send_email_reminder` to a different class. It is clearly not the responsibility of Cat to know that.
 
 Ok, so you might say, what about the case where the behavior does not violate the single responsibility principle? Which should we use?
@@ -63,7 +75,9 @@ Well, if we are talking about callbacks in Rails ActiveRecord models, I believe 
 Alright, so if an ActiveRecord callback does not deal with the internal state of the object, it is probably violating the single responsibility principle and should be extracted. If it is dealing with the internal state of the object and persistence logic, then we can use it. But what about when we have our own classical inheritance structure with some other classes? We are likely not dealing with persistence logic. What's wrong with using super then?
 
 Well, let's look at an example. Football is our superclass from which Association Football inherits behavior. In the U.S. this type of Football is more commonly known as soccer. We'll call `super` in our initialize method to get the initialize behavior from Football:
+
 {% highlight ruby %}
+
     class Football
       attr_reader :ball
 
@@ -80,6 +94,7 @@ Well, let's look at an example. Football is our superclass from which Associatio
           super(args)
       end
     end
+
 {% endhighlight %}
 
 What's wrong with the code above is that even though our AssociationFootball class inherits the behavior we desire, our subclass knows not only about itself but also about its parent class. Any knowledge that a class has regarding another class creates dependencies, even if that other class is its parent class.
@@ -87,14 +102,17 @@ What's wrong with the code above is that even though our AssociationFootball cla
 Our AssociationFootball class not only does it now know *how* to implement the initialization method of Football but it also knows *when* it needs to be implemented. We want to get rid of this coupling. In addition, when we, or some other developers in the future, want to add more subclasses, they must now know they have to call `super` from the subclass.
 
 Say we add an American Football (known simply as football in the U.S.) class and we forget to use `super`. An object from the class below will be instantiated without throwing an error.
+
 {% highlight ruby %}
-     class AmericanFootball < Football
+
+    class AmericanFootball < Football
       attr_reader :kicker
 
       def initialize(args)
           @kicker = args[:kicker]
       end
     end
+
 {% endhighlight %}
 
 In fact, we won't get an error until we are using a method that is making use of `ball`, which was defined in the Football superclass.
@@ -102,6 +120,7 @@ In fact, we won't get an error until we are using a method that is making use of
 The better alternative is to send hook messages. In the example below we use 'post_initialize' instead of using 'super'. This still lets the subclasses define what gets implemented, but they no longer have to know *when* it gets implemented or how the superclass implements it.
 
 {% highlight ruby %}
+
     class Football
       attr_reader :ball
 
@@ -123,13 +142,14 @@ The better alternative is to send hook messages. In the example below we use 'po
       end
     end
 
-     class AmericanFootball < Football
+    class AmericanFootball < Football
       attr_reader :kicker
 
       def post_initialize(args)
           @kicker = args[:kicker]
       end
     end
+
 {% endhighlight %}
 
 I believe this to be a much better solution. Our classes are less coupled. The subclasses do not need to know how or when the initialize is implemented. In fact, they do not even need to know who is calling the method. All our subclasses know is that they receive a message for 'post_intialize' with some arguments and that they can implement it.

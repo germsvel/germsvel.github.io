@@ -32,26 +32,28 @@
           <div class="site">
             <div class="header">
 
-              <img id="gv-cartoon" src="images/gv_sib_cartoon.png" alt="German cartoon">
+              <img id="gv-cartoon" src="/images/gv_sib_cartoon.png" alt="German cartoon">
               <h1 class="title"><a href="/">German Velasco</a></h1>
               <a class="extra" href="/">Web Developer</a>
 
               <span id="social-media-btns">
                 <!-- <a class="social-media-btn" href="http://germsvel.tumblr.com" target="_blank" title="German's tumblr"><img src="images/glyphicons_388_tumblr.png"></a> -->
-                <a class="social-media-btn" href="http://twitter.com/germsvel" target="_blank" title="German's twitter"><img src="images/glyphicons_411_twitter.png"></a>
-                <a class="social-media-btn" href="http://github.com/germsvel" target="_blank" title="German's github repo"><img src="images/glyphicons_401_github.png"></a>
-                <a class="social-media-btn" href="http://www.linkedin.com/pub/german-velasco/40/188/702/" target="_blank" title="German's LinkedIn"><img src="images/glyphicons_397_linked_in.png"></a>
+                <a class="social-media-btn" href="http://twitter.com/germsvel" target="_blank" title="German's twitter"><img src="/images/glyphicons_411_twitter.png"></a>
+                <a class="social-media-btn" href="http://github.com/germsvel" target="_blank" title="German's github repo"><img src="/images/glyphicons_401_github.png"></a>
+                <a class="social-media-btn" href="http://www.linkedin.com/pub/german-velasco/40/188/702/" target="_blank" title="German's LinkedIn"><img src="/images/glyphicons_397_linked_in.png"></a>
               </span>
 
               <!-- <br/>
               <a href="/about" title="About">About me</a> -->
             </div>
 
-                <h2>Why not to use super blindly</h2>
-<p class="meta">14 Sep 2013</p>
+                <div class='container'>
+  <div class="row">
+    <div class="post">
+      <p class="meta blog-post-date">14 Sep 2013</p>
+      <h2 class='blog-post-title'>Why not to use super blindly</h2>
 
-<div id="post">
-<p>Lately I have read and heard a lot of people talk about using <code>super</code> to extend behavior instead of using callbacks in Rails. The complaint is that callbacks are hard to test and often violate the simple responsibility principle. Finally, I have heard it said that “super is more OOPish”. I don’t believe that to be wholly true. Let me explain why.</p>
+      <p>Lately I have read and heard a lot of people talk about using <code>super</code> to extend behavior instead of using callbacks in Rails. The complaint is that callbacks are hard to test and often violate the simple responsibility principle. Finally, I have heard it said that “super is more OOPish”. I don’t believe that to be wholly true. Let me explain why.</p>
 
 <p>For those who do not know what <code>super</code> does or what callbacks are, let’s look at an example to clarify how they work. Suppose you want to do something right after you save some data to a database. Well, in Rails we can use an <code>after_save</code> callback:</p>
 <div class='highlight'><pre><code class='ruby'>    <span class='k'>class</span> <span class='nc'>YourClass</span> <span class='o'>&lt;</span> <span class='no'>ActiveRecord</span><span class='o'>::</span><span class='no'>Base</span>
@@ -123,7 +125,7 @@
 <p>Our AssociationFootball class not only does it now know <em>how</em> to implement the initialization method of Football but it also knows <em>when</em> it needs to be implemented. We want to get rid of this coupling. In addition, when we, or some other developers in the future, want to add more subclasses, they must now know they have to call <code>super</code> from the subclass.</p>
 
 <p>Say we add an American Football (known simply as football in the U.S.) class and we forget to use <code>super</code>. An object from the class below will be instantiated without throwing an error.</p>
-<div class='highlight'><pre><code class='ruby'>     <span class='k'>class</span> <span class='nc'>AmericanFootball</span> <span class='o'>&lt;</span> <span class='no'>Football</span>
+<div class='highlight'><pre><code class='ruby'>    <span class='k'>class</span> <span class='nc'>AmericanFootball</span> <span class='o'>&lt;</span> <span class='no'>Football</span>
       <span class='kp'>attr_reader</span> <span class='ss'>:kicker</span>
 
       <span class='k'>def</span> <span class='nf'>initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
@@ -155,7 +157,7 @@
       <span class='k'>end</span>
     <span class='k'>end</span>
 
-     <span class='k'>class</span> <span class='nc'>AmericanFootball</span> <span class='o'>&lt;</span> <span class='no'>Football</span>
+    <span class='k'>class</span> <span class='nc'>AmericanFootball</span> <span class='o'>&lt;</span> <span class='no'>Football</span>
       <span class='kp'>attr_reader</span> <span class='ss'>:kicker</span>
 
       <span class='k'>def</span> <span class='nf'>post_initialize</span><span class='p'>(</span><span class='n'>args</span><span class='p'>)</span>
@@ -166,6 +168,9 @@
 <p>I believe this to be a much better solution. Our classes are less coupled. The subclasses do not need to know how or when the initialize is implemented. In fact, they do not even need to know who is calling the method. All our subclasses know is that they receive a message for ‘post_intialize’ with some arguments and that they can implement it.</p>
 
 <p>So although I know that testing callbacks is difficult when they are violating the single responsibility principle, I do not recommend blindly using <code>super</code> either. I think we ought to use callbacks when they relate to the object in question and Rails <code>after_save</code> and <code>after_create</code> callbacks only when dealing with persistence logic. If you use classical inheritance, and the superclass is not ActiveRecord (or some other class of which you are not the owner), send hook messages instead and hide the knowledge of how and when to implement behavior from your subclasses.</p>
+
+    </div>
+  </div>
 </div>
 
 

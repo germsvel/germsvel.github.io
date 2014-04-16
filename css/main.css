@@ -191,6 +191,27 @@ div.posts {
     margin-right: auto;
 }
 
+div.post {
+    width: 80%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+.blog-post-title {
+  text-align: center;
+  margin-bottom: 0.2px;
+}
+
+.blog-post-date {
+  font-style: italic;
+  float: right;
+}
+
+.blog-post-excerpt {
+  clear: both;
+}
 
 
 /* ==========================================================================
