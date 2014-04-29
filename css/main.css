@@ -98,6 +98,10 @@ a{
     background-color: inherit;
 }
 
+p {
+  font-family: 'Open Sans', 'sans-serif';
+}
+
 .header {
 -webkit-font-smoothing: antialiased;
 -webkit-border-radius: 3px;
@@ -185,6 +189,37 @@ div.introduction {
 }
 
 
+div.post {
+    width: 80%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+.blog-post-title {
+  text-align: center;
+  margin-bottom: 0.2px;
+  font-family: 'Lemon', 'cursive';
+}
+
+.blog-post-title a {
+  color: #222;
+}
+
+.blog-post-title a:hover {
+  color: #1E81B6;
+}
+
+.blog-post-date {
+  font-size: 80%;
+  text-align: center;
+}
+
+.blog-post-excerpt {
+  clear: both;
+}
+
 
 /* ==========================================================================
    Author's media queries
@@ -212,7 +247,7 @@ div.introduction {
         font-size: 40px;
     }
 
-    h1.title { 
+    h1.title {
        padding-top: 40px;
     }
 
@@ -231,7 +266,7 @@ div.introduction {
         font-size: 32px;
     }
 
-    h1.title { 
+    h1.title {
        padding-top: 53px;
     }
 
@@ -244,7 +279,7 @@ div.introduction {
         height: 22px;
         width: 22px;
     }
-    
+
 
 }
 
@@ -258,7 +293,7 @@ div.introduction {
         font-size: 26px;
     }
 
-     h1.title { 
+     h1.title {
        padding-top: 46px;
     }
 
