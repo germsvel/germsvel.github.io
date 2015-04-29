@@ -3,13 +3,14 @@ layout: post
 title:  "Why not to use super blindly"
 date:   2013-09-14 17:14:14
 categories: blog
+tags: Ruby
 ---
 
 Lately I have read and heard a lot of people talk about using `super` to extend behavior instead of using callbacks in Rails. The complaint is that callbacks are hard to test and often violate the simple responsibility principle. Finally, I have heard it said that "super is more OOPish". I don't believe that to be wholly true. Let me explain why.
 
 For those who do not know what `super` does or what callbacks are, let's look at an example to clarify how they work. Suppose you want to do something right after you save some data to a database. Well, in Rails we can use an `after_save` callback:
 
-{% highlight ruby linenos %}
+{% highlight ruby linenos=table %}
 
     class YourClass < ActiveRecord::Base
       after_save :do_something
@@ -23,7 +24,7 @@ For those who do not know what `super` does or what callbacks are, let's look at
 
 Using `super`, on the other hand, passes the message up through the superclass chain. This way, we can get the behavior described in the superclass and we can add some behavior of our own:
 
-{% highlight ruby linenos %}
+{% highlight ruby linenos=table %}
 
     class YourClass < ActiveRecord::Base
       def save
@@ -40,7 +41,7 @@ Back to the main point. I mentioned above that people think callbacks are really
 
 In such a case, I think regardless of whether you are using a callback or `super`, you need to extract that method to a different class. For example,
 
-{% highlight ruby linenos %}
+{% highlight ruby linenos=table %}
 
     class Cat < Mammal
       after_save: send_reminder_to_feed
@@ -54,7 +55,7 @@ In such a case, I think regardless of whether you are using a callback or `super
 
 as well as,
 
-{% highlight ruby linenos %}
+{% highlight ruby linenos=table %}
 
     class Cat < Mammal
 
@@ -76,7 +77,7 @@ Alright, so if an ActiveRecord callback does not deal with the internal state of
 
 Well, let's look at an example. Football is our superclass from which Association Football inherits behavior. In the U.S. this type of Football is more commonly known as soccer. We'll call `super` in our initialize method to get the initialize behavior from Football:
 
-{% highlight ruby linenos %}
+{% highlight ruby linenos=table %}
 
     class Football
       attr_reader :ball
@@ -85,6 +86,10 @@ Well, let's look at an example. Football is our superclass from which Associatio
           @ball = args[:ball]
       end
     end
+{% endhighlight %}
+
+
+{% highlight ruby linenos=table %}
 
     class AssociationFootball < Football
       attr_reader :keeper
@@ -103,7 +108,7 @@ Our AssociationFootball class not only does it now know *how* to implement the i
 
 Say we add an American Football (known simply as football in the U.S.) class and we forget to use `super`. An object from the class below will be instantiated without throwing an error.
 
-{% highlight ruby linenos %}
+{% highlight ruby linenos=table %}
 
     class AmericanFootball < Football
       attr_reader :kicker
@@ -119,7 +124,7 @@ In fact, we won't get an error until we are using a method that is making use of
 
 The better alternative is to send hook messages. In the example below we use 'post_initialize' instead of using 'super'. This still lets the subclasses define what gets implemented, but they no longer have to know *when* it gets implemented or how the superclass implements it.
 
-{% highlight ruby linenos %}
+{% highlight ruby linenos=table %}
 
     class Football
       attr_reader :ball
@@ -134,6 +139,10 @@ The better alternative is to send hook messages. In the example below we use 'po
       end
     end
 
+{% endhighlight %}
+
+{% highlight ruby linenos=table %}
+
     class AssociationFootball < Football
       attr_reader :keeper
 
@@ -141,6 +150,10 @@ The better alternative is to send hook messages. In the example below we use 'po
           @keeper = args[:keeper]
       end
     end
+
+{% endhighlight %}
+
+{% highlight ruby linenos=table %}
 
     class AmericanFootball < Football
       attr_reader :kicker
