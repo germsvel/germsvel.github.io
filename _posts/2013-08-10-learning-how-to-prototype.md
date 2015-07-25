@@ -3,6 +3,7 @@ layout: post
 title:  "Learning how to prototype"
 date:   2013-08-10 17:14:14
 categories: blog
+published: false
 ---
 
 As a developer, I am constantly trying to improve not only the quality and design of my code but also my understanding of application development as a whole. So, last week I attended a prototyping lesson at Intelligent.ly taught by Maggie Steciuk, the lead designer at Terrible Labs. Prototyping, I learned, helps us in two very important areas: it helps us to better communicate with clients and with team members, and it helps us to better understand ideas, especially our own.

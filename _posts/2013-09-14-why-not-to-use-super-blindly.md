@@ -4,6 +4,7 @@ title:  "Why not to use super blindly"
 date:   2013-09-14 17:14:14
 categories: blog
 tags: Ruby
+published: false
 ---
 
 Lately I have read and heard a lot of people talk about using `super` to extend behavior instead of using callbacks in Rails. The complaint is that callbacks are hard to test and often violate the simple responsibility principle. Finally, I have heard it said that "super is more OOPish". I don't believe that to be wholly true. Let me explain why.

@@ -3,6 +3,7 @@ layout: post
 title:  "Thoughts on my progress as a new developer?"
 date:   2013-07-14 17:14:14
 categories: blog
+published: false
 ---
 
 Web frameworks like Rails have made it very easy for developers to get a simple application up and running. It is fantastic! But for a new developer like myself, it is also a double edged sword. Since it is so effortless to get a simple application up and running, it is also extremely easy to think that you’ve become a real developer in a matter of months and to stop learning.

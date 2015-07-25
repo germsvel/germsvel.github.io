@@ -3,6 +3,7 @@ layout: post
 title:  "Went to a TDD workshop from thoughtbot"
 date:   2013-07-07 17:14:14
 categories: blog
+published: false
 ---
 
 Last week, part of Promoboxx’s engineering team went to thoughtbot’s Test-Driven Rails workshop. It was a workshop I really wanted to take, and something I had been hoping we’d do as a team since I first joined Promoboxx as an intern a month and a half ago.

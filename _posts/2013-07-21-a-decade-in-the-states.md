@@ -3,6 +3,7 @@ layout: post
 title:  "A decade in the states"
 date:   2013-07-21 17:14:14
 categories: blog
+published: false
 ---
 
 This past Thursday, July the 18th, marked a decade since my family moved to the U.S. It is impressive to realize how fast time has gone by and extremely humbling to look back at all the friendships and relationships that I have formed. I came as a boy of fourteen whose entire life had been uprooted and whose friendships had all vanished within a six hour flight to Miami. I am now a man utterly thankful for those who have been around me throughout the last ten years, who through pain, tears, laughter, merriment, friendship, fights, disagreements, and myriad experiences have helped shape the man I have become.

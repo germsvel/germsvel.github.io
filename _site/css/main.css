@@ -92,14 +92,36 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-a{
-    text-decoration: none;
-    color: #1E81B6;
-    background-color: inherit;
+a {
+  text-decoration: none;
+  color: #1E81B6;
+  background-color: inherit;
 }
 
 p {
-  font-family: 'Open Sans', 'sans-serif';
+  font-family: 'Lora', 'serif';
+  font-size: 110%;
+  line-height: 170%;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+}
+
+code {
+  background-color: #eee;
+  padding: 3px;
+
+}
+
+table.highlighttable {
+  overflow-x:auto;
+  display:block;
+}
+
+table.highlighttable td.code {
+  width:100%;
 }
 
 .header {
@@ -190,17 +212,21 @@ div.introduction {
 
 
 div.post {
-    width: 80%;
-    max-width: 600px;
-    margin-left: auto;
+    max-width: 696px;
     margin-right: auto;
+    margin-left: auto;
+    width: 90%;
+    padding-right: 5%;
+    padding-left: 5%;
     border-bottom: 1px solid #ddd;
 }
 
 .blog-post-title {
+  width: 100%;
   text-align: center;
   margin-bottom: 0.2px;
-  font-family: 'Lemon', 'cursive';
+  font-family: 'Lato', sans-serif;
+  font-weight: bold;
 }
 
 .blog-post-title a {
@@ -219,7 +245,6 @@ div.post {
 .blog-post-excerpt {
   clear: both;
 }
-
 
 /* ==========================================================================
    Author's media queries
