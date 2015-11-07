@@ -7,15 +7,15 @@ tags: Ruby, RSpec, Testing
 published: false
 ---
 
-After working with some co-workers who do not practice test-driven development, I was struck by how much my worflow depends on tests.
-It was only then that I realized just how much tests are an integral part of my work. And I don't mean writing tests as an afterthought
-because the team requires it to do so. But rather, relying on your tests for so many things. Anyway, since I came to that realization
-recently, I have decided to put in text some of my workflow. Perhaps it is more of mental flow. In any case, when I say test-first,
-I do not only mean TDD or BDD, though I certainly don't mean less. But rather, when I say test-first I mean a whole workflow that considers
-tests as first class citizens and as drivers of understanding, exploration, design, implementation, and refactoring.
+
+It was only recently that I realized just how much tests are an integral part of my workflow.
+I rely on them for so much of what I do, and I use them constantly. I think I can safely say that I test first.
+And when I say test first, I do not only mean TDD or BDD, though I certainly don't mean less than that.
+What I mean by test first is that my whole workflow considers tests as first class citizens; they are drivers of understanding, via documentation
+and exploration, design, implementation, and refactoring.
 
 I imagine this will take a few blog posts, so I start with part-1, hoping that more parts will follow. I will progress as I might progress
-when writing a feature. In the process, I will give some insight into how I tend to think, and how involved tests are in that thinking
+when writing a feature. In the process, I will give some insight into how I tend to think, and how tests are involved in that thinking
 process. It is my hope that some may be helped by seeing how my workflow is influenced by tests, and that it would encourage them to test
 more, or at all, if they haven't yet discovered the amazing power of keeping your tests first.
 
@@ -23,16 +23,16 @@ more, or at all, if they haven't yet discovered the amazing power of keeping you
 
 Whenever I start working on a feature, I seek to understand the flow of code. Most of my time is spent working on Rails apps, so my flow
 will naturally go from a view or a controller down the stack. During this process, I often encounter pieces of code I have not seen
-before. When I do so, I love running the classes tests with documentation format. In `rspec`, you can get that by running,
+before. When I do so, I like to run the tests with documentation format. In `rspec`, you can get that by running,
 
 ```
 rspec spec/class_name_spec.rb --fd
 ```
 
-I find this extremely helpful. A caveat is that this only works well if the tests are well written. Sometimes I find that the description
-of the test does not correspond to what the test is actually asserting. It is very helpful when the `describe`, `context`, `it` blocks are
-well presented. I tend to prefer having a `describe` for every public method a class exposes. That way, when you look at tests as documentation
-you can see very clearly what is the public interface of the class and presumably what are its return values.
+I find this extremely helpful. With one quick glance I can get a good idea of what the class does. This is obviously not true when the tests are poorly written.
+For example, sometimes I find that the description of the test does not correspond to what the test is actually asserting. It is very helpful when the `describe`,
+`context`, `it` blocks are well presented. I tend to prefer having a `describe` for every public method a class exposes.
+That way, when you look at tests as documentation you can see very clearly what is the public interface of the class and presumably what are its return values.
 
 This is a good example,
 
