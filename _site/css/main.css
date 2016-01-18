@@ -99,9 +99,12 @@ a {
 }
 
 p {
-  font-family: 'Lora', 'serif';
   font-size: 110%;
   line-height: 170%;
+}
+
+p, li, ul, ol, span, div {
+  font-family: 'Lora', 'serif';
 }
 
 pre {
