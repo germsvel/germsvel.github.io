@@ -92,5 +92,34 @@ RSpec.describe BlogPost, '#publish' do
 end
 {% endhighlight %}
 
-And the test fails, and so it goes on an on. What the test is telling us is that the method we are testing has a complex structure, which is a code smell.
-Each method should be doing one thing. Instead this method is doing a lot of things.
+And the test fails, and so it goes on an on. What the test is telling us is that the method we are testing has a complex structure.
+The method is likely doing more than one thing, and in most circumstances, it should be doing just one thing.
+
+2. When a test requires too much setup.
+
+When tests have or require a lot of setup, it is often indicative of tight coupling, especially when the setup has lots of
+other objects. For example, looking at our blog post example, if we needed to setup three other objects to `publish` the blog post, a blog, and author, and an editor,
+then we know that our `BlogPost` class depends on those other classes for its functioning. Some coupling is unaviodable, but most
+of the times we want our code to be lightly coupled so that it is easily extensible, and so that changes in one class do not necessitate changes in other classes.
+
+{% highlight ruby %}
+RSpec.describe BlogPost, '#publish' do
+  it 'publishes a post' do
+    blog = Blog.create
+    author = Author.create
+    editor = Editor.create
+    post = BlogPost.create(blog: blog, author: author, editor: editor)
+
+    post.publish
+
+    expect(post).to be_published
+  end
+end
+{% endhighlight %}
+
+Of course, as with any code smell, it does not mean this is necessarily a problem or that it is something that needs to be fixed.
+For example, we can expect feature specs to have more setup since they have to run through a larger section of our code.
+
+3. Too many `context`s
+4. Testing private methods
+
