@@ -52,5 +52,57 @@ a tight coupling between these classes. Whether the coupling is intentional or n
 design flaw.
 
 2. Too many `context`s
+
+When we see a test with several contexts, it is often an indication that the code it is testing has conditional logic.
+For example, we may see a test like this,
+
+{% highlight ruby %}
+RSpec.describe InsuranceProvider, '#cost' do
+  context 'Allstate' do
+    ...
+  end
+
+  context 'Esurance' do
+    ...
+  end
+
+  context 'Geico' do
+    ...
+  end
+
+  ...
+
+end
+{% endhighlight %}
+
+It would not be surprising to find a `case` statement in the implementation of `cost`. E.g.,
+
+{% highlight ruby %}
+class InsuranceProvider
+  ...
+
+  def cost(provider)
+    case provider
+    when 'Allstate'
+      250
+    when 'Esurance'
+      300
+    when 'Geico'
+      200
+    ...
+    else
+      0
+    end
+  end
+end
+{% endhighlight %}
+
+Just as `case` statements are a code smell that we are missing an abstraction, so do too many `contexts` imply that we are
+missing an abstraction. In both cases, we know could refactor the code to use polymorphism.
+
+It is good to note that just as not all case statements need to be changed (sometimes a case statement is desired), a test having
+lots of `context` blocks or `describe` blocks does not always point to a missed abstraction. Still, as wise counselors, our tests
+inform us that something may be fishy.
+
 3. Testing private methods
 
