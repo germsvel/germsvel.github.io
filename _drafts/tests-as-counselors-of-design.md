@@ -13,6 +13,8 @@ I use them constantly, allowing them to influence every stage of my workflow, so
 
 I’ll break the ways tests are part of my workflow into four camps: tests are tools for understanding, counselors of design, drivers of implementation, and pillars of refactoring.
 
+In this post we’ll look at how they are counselors of the design.
+
 # Counselors of Design
 
 One of the great benefits of tests is that they are the first piece of code that interacts with our application.
@@ -24,17 +26,18 @@ flaws in design in our code. Let’s look at a few:
 1. When a test requires too much setup
 
 When tests have or require a lot of setup, it is often indicative of tight coupling between the class being tested and other classes.
-For example, looking at our blog post example, if we needed to setup three other objects to `publish` the blog post, a blog, and author, and an editor,
-then we know that our `BlogPost` class depends on those other classes for its functioning. Some coupling is perhaps unaviodable in the case of a `BlogPost`, but most
-of the times we want our code to be lightly coupled so that it is easily extensible, and so that changes in one class do not necessitate changes in other classes.
+Decoupled code makes our application more easily extensible, making it so that changes in one class do not necessitate changes in several other classes.
+
+For example, looking at a test example below, in order to `publish` a blog post, we need to set up a blog, an author, and an editor.
+This signals thatn in one way or another, our `BlogPost` class _depends_ on those other classes for its functioning.
 
 {% highlight ruby %}
 RSpec.describe BlogPost, '#publish' do
   it 'publishes a post' do
-    blog = Blog.create
-    author = Author.create
-    editor = Editor.create
-    post = BlogPost.create(blog: blog, author: author, editor: editor)
+    Blog.create
+    Author.create
+    Editor.create
+    post = BlogPost.create
 
     post.publish
 
@@ -43,8 +46,10 @@ RSpec.describe BlogPost, '#publish' do
 end
 {% endhighlight %}
 
-Of course, as with any code smell, it does not mean this is necessarily a problem or that it is something that needs to be fixed.
-For example, we can expect feature specs to have more setup since they have to run through a larger section of our code.
+It may be that if we looked at the `publish` method in the `BlogPost` class we would find the `Author`, `Editor`, and `Blog` classes referenced. Or it might be that
+one of those classes is referenced in `publish` but the other two are referenced within that class. Whatever the case may be, this test is telling us that there is
+a tight coupling between these classes. Whether the coupling is intentional or necessary, the test cannot tell us. But it serves as a wise counselor revealing a possible
+design flaw.
 
 2. Too many `context`s
 3. Testing private methods
