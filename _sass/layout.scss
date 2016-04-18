@@ -1,7 +1,7 @@
 // Layout rules: Sections of the page.
 // Holds modules together.
 
-.header {
+#header {
   -webkit-font-smoothing: antialiased;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -23,75 +23,20 @@
   height: 200px;
 }
 
-.header h1 {
-  margin-bottom: 0;
-  font-size: 60px;
-  line-height: 1;
-  letter-spacing: -1px;
-  color: #fff;
-}
-
-.header p {
-  font-size: 18px;
-  font-weight: 200;
-  line-height: 30px;
-  color: #1E81B6;
-}
-
-.header a {
+#header a {
   color: #fff;
   text-decoration: none;
 }
 
-@media only screen and (max-width: 646px) {
-  .header h1 {
-    font-size: 50px;
-  }
-
-  .header .extra {
-    font-size: 16px;
-  }
-}
-
-@media only screen and (max-width: 534px) {
-  .header h1 {
-    font-size: 40px;
-  }
-
-  h1.title {
-   padding-top: 40px;
-  }
-}
-
 @media only screen and (max-width: 450px) {
-  .header {
+  #header {
     padding-top: 0px;
-  }
-
-  .header h1 {
-    font-size: 32px;
-  }
-
-  h1.title {
-    padding-top: 53px;
   }
 }
 
 @media only screen and (max-width: 380px){
-  .header {
+  #header {
     height: 180px;
     padding-left: 26px;
-  }
-
-  .header h1 {
-    font-size: 26px;
-  }
-
-  h1.title {
-    padding-top: 46px;
-  }
-
-  .header .extra {
-    font-size: 12px;
   }
 }
