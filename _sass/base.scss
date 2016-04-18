@@ -21,6 +21,7 @@ textarea {
 }
 
 body {
+  font-family: 'Lora', 'serif';
   font-size: 1em;
   line-height: 1.4;
 }
@@ -107,12 +108,13 @@ p {
 }
 
 p, li, ul, ol, span, div {
-  font-family: 'Lora', 'serif';
 }
 
 pre {
-  background-color: #223;
-  padding: 10px;
+  background-color: #122b3b;
+  font-family: 'Ubuntu Mono', 'Monaco', monospace;
+  padding: 15px;
+  line-height: 15px;
 }
 
 code {
