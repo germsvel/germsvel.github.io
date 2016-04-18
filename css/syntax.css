@@ -27,7 +27,6 @@
 }
 .highlight .k, .highlight .kd, .highlight .kv {
   color: #f6dd62;
-  font-weight: bold;
 }
 .highlight .o, .highlight .ow {
   color: #4df4ff;
@@ -81,11 +80,9 @@
 }
 .highlight .no {
   color: #b2fd6d;
-  font-weight: bold;
 }
 .highlight .nc {
   color: #b2fd6d;
-  font-weight: bold;
 }
 .highlight .nd {
   color: #b2fd6d;
@@ -125,7 +122,6 @@
 }
 .highlight .s, .highlight .sb, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .sr, .highlight .s1 {
   color: #fff0a6;
-  font-weight: bold;
 }
 .highlight .se {
   color: #4df4ff;
@@ -161,10 +157,4 @@
 .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi {
   color: #a8e1fe;
   font-weight: bold;
-}
-
-pre {
-  padding: 15px;
-  line-height: 15px;
-  font-family: 'Ubuntu Mono', 'Monaco', monospace;
 }
