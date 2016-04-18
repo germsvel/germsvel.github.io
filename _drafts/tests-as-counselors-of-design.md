@@ -106,3 +106,5 @@ inform us that something may be fishy.
 
 3. Testing private methods
 
+Private methods should be... well private.
+

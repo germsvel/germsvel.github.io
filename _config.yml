@@ -1,2 +1,5 @@
 name: German Velasco
 highlighter: 'rouge'
+sass:
+  sass_dir: _sass
+  style: compressed
