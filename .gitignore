@@ -4,3 +4,5 @@ _site/
 *.swo
 .sass-cache/
 .sass-cache*
+
+*.DS_Store
