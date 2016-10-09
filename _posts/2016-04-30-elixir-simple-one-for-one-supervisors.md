@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Elixir Supervisors"
+title:  "Elixir simple_one_for_one Supervisors"
 categories: blog
 tags: Elixir, OTP, Supervisors
 ---
