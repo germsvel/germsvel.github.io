@@ -108,6 +108,7 @@ method being tested. For example, say we are testing the following method,
 {% highlight ruby %}
 class Blog
   def cancel_post(post)
+
     case post.status
     when :published
       # do a
@@ -116,6 +117,7 @@ class Blog
     else
       # do c
     end
+
   end
 end
 {% endhighlight %}
@@ -123,12 +125,13 @@ end
 We may then have our spec file look like this,
 
 {% highlight ruby %}
-Rspec.describe Blog, '#cancel_post' do
+RSpec.describe Blog, '#cancel_post' do
+
   context 'when post status is published' do
     # test here
   end
 
-  context 'when post status is 'draft' do
+  context 'when post status is draft' do
     # test here
   end
 
@@ -149,8 +152,53 @@ the [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_respo
 know that branching logic, even if only an `if/else` statement, can mean that
 the objet has more than one respnosibility. The object is doing the `if`
 part _and_ it is doing the `else` part. The "and" hints at multiple
-responsibilities and so does multiple `context` blocks in a test.
+responsibilities and so do multiple `context` blocks in a test.
 
 ## Testing Private Methods
+
+Another way in which tests counsel us in the design of our code is when we
+either want to write a test for a private method or see a test that is already
+testing a private method.
+
+For example, you may see something like this,
+
+{% highlight ruby %}
+RSpec.describe Blog, '#slug' do
+  it 'dynamically calculates a slug from the author’s name' do
+    blog = Blog.build
+
+    slug = blog.send(:create_slug)
+
+    expect(slug).to eq 'the-greatest-author-name'
+  end
+end
+{% endhighlight %}
+
+Using ruby's `send` method allows you to invoke methods regardless of whether
+they are private or not.
+
+But testing private methods is usually done because they have important or
+complex logic that we want to be tested in our system. And anything that is that
+important should be extracted into public methods in other classes or into an
+object of its own. Testing should only be done of public methods.
+
+For example, in our example above, it may be that the private method really
+belongs in the `Author` class, and our test would then test a public method,
+
+{% highlight ruby %}
+RSpec.describe Author, '#create_slug' do
+
+  it 'dynamically calculates a slug from the name' do
+    author = Author.new
+
+    slug = author.create_slug
+
+    expect(slug).to eq 'the-greatest-author-name'
+  end
+end
+{% endhighlight %}
+
+
+___
 
 In the next posts on this series, I will look at how tests help with implementation and refactoring.
