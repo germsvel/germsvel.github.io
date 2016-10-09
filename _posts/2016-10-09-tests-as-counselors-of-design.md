@@ -17,7 +17,6 @@ I use them constantly, allowing them to influence every stage of my workflow, so
 
 I'll break the ways tests are part of my workflow into four camps: tests are tools for understanding, counselors of design, drivers of implementation, and pillars of refactoring.
 
-
 # Counselors of Design
 
 One of the benefits of tests is that they are the first piece of code that will
@@ -54,7 +53,7 @@ and to extend our application, and that's a good thing.
 So if you see something like this in your tests,
 
 {% highlight ruby %}
-describe BlogPost, '#publish' do
+RSpec.describe BlogPost, '#publish' do
   it 'publishes a blog post' do
     pages = Pages.create(20)
     Blog.create(pages)
@@ -81,8 +80,76 @@ Nevertheless, even then your tests may be telling you that there is a lot of
 coupling between classes. It may just be harder to tell whether or not it is
 mere integration test setup or a product of strong coupling.
 
-
 ### Too Many "Contexts"
+
+In `RSpec`, the way to define a group of related tests is by keeping them all within
+a `describe` or a `context` block. For example, one might see the following spec,
+
+{% highlight ruby %}
+RSpec.describe BlogPost do
+  context 'with author' do
+    it 'is publishable' do
+      # some code here
+    end
+  end
+
+  context 'without author' do
+    it 'is unpublishable' do
+      # some code here
+    end
+  end
+end
+{% endhighlight %}
+
+Now `context` blocks are not a problem in and of themselves, and not every use of
+them is bad. But they are often used as a consequence of branching logic in the
+method being tested. For example, say we are testing the following method,
+
+{% highlight ruby %}
+class Blog
+  def cancel_post(post)
+    case post.status
+    when :published
+      # do a
+    when :draft
+      # do b
+    else
+      # do c
+    end
+  end
+end
+{% endhighlight %}
+
+We may then have our spec file look like this,
+
+{% highlight ruby %}
+Rspec.describe Blog, '#cancel_post' do
+  context 'when post status is published' do
+    # test here
+  end
+
+  context 'when post status is 'draft' do
+    # test here
+  end
+
+  context 'when post status is something else' do
+    # test here
+  end
+end
+{% endhighlight %}
+
+Those already familiar with code smells might have already noticed that case
+statements are code smells in and of themselves. But others may not have been
+so trained, so the test tells us, like a good counselor might, that our method
+probably has more than one responsibility.
+
+A less clear example may be a method with an `if/else` statement in it.
+Many people would just read that and not think twice.  But those familiar with
+the [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle)
+know that branching logic, even if only an `if/else` statement, can mean that
+the objet has more than one respnosibility. The object is doing the `if`
+part _and_ it is doing the `else` part. The "and" hints at multiple
+responsibilities and so does multiple `context` blocks in a test.
 
 ## Testing Private Methods
 
