@@ -4,7 +4,7 @@ title:  "Tests as Counselors of Design"
 date:   2016-10-09
 categories: blog
 tags: Ruby, RSpec, Testing
-excerpt: <p>One of the benefits of tests is that they are the first piece of code that will interact with our application code. As such, they can offer valuable insights into the complexity of our code.</p>
+excerpt: <p>One of the benefits of tests is that they are the first piece of code that will interact with our application. As such, they can offer valuable insights into the application's complexity.</p>
 ---
 
 
