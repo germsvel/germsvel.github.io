@@ -69,9 +69,9 @@ end
 
 A notable exception to the too-much-setup code smell is a feature spec. Usually,
 feature specs require more setup since they are doing integration testing. Even
-then, however, your tests may still be telling you that there is too much
-coupling between classes. It is just harder to know whether the large setup is
-due to integration testing or the product of strong coupling.
+then, however, your tests may be telling you that there is too much coupling
+between classes. It is just harder to know whether the large setup is due to
+integration testing or the product of strong coupling.
 
 ## Too Many "Contexts"
 
@@ -218,7 +218,7 @@ end
 
 
 This may seem normal to some, after all how many times have seen things like
-these in our code bases,
+these in our code bases?
 
 {% highlight ruby %}
 
@@ -234,12 +234,11 @@ blog.send_articles
 But those familiar with the [Single Responsibility
 Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle) know
 that it is good to ask, "What is the object doing? What is it's reponsibility?"
-When the answer to that question comes with an "and", we are told that the
-object has more than one responsibility and hence more than one reason to
-change. For example, the answer to our code above may be "the blog is publishing
-articles _and_ it is sending those articles via email". So just like asking that
-question, our tests, like good counselors, may be telling us that our object has
-too many responsibilities.
+When the answer to that question comes with an "and", we can conclude that the
+class has more than one responsibility and hence more than one reason to change.
+For example, the answer to our code above may be "the blog is publishing
+articles _and_ it is sending those articles via email". Once again our tests act
+like good counselors and tell us that our class has too many responsibilities.
 
 ## Testing Private Methods
 
@@ -266,13 +265,13 @@ Using ruby's `send` method allows you to invoke methods regardless of whether
 they are private or not.
 
 But testing private methods is usually done because they have important or
-complex logic that we want to be tested in our application. And anything that is that
+complex logic that we want tested in our application. And anything that is that
 important would better serve our application as a public method in another class
 or as part of the public interface of a new object. The fact that we want to
 test it should help us recognize that this code has an important function
-in our application and is not something to be relegated to private methods.
+in our application and is not something to be relegated to a private method.
 
-For example, in our example above, that private method really
+For example, in our example above, the private method probably
 belongs in the `Author` class, and our test becomes a test of a public method,
 
 {% highlight ruby %}
@@ -296,5 +295,5 @@ towards what might be wrong with the test itself. People who don't like testing
 often want to blame the test. But don't shoot the messenger; fix the real
 problem.
 
-The next posts on this series will look at how tests help with implementation
+Up next in this series will look at how tests help with implementation
 and refactoring. Stay tuned.
