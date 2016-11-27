@@ -20,7 +20,7 @@ Blog.joins(:blog_categories).where(blog_categories: {category: 'consumer'})
 
 But it is better to put that in a scope so that we can reuse it and so that we create a nicer interface to interact with our model:
 
-{% highlight ruby linenos=table %}
+{% highlight ruby %}
 
 class Blog < ActiveRecord::Base
   has_many :blog_categories
@@ -32,7 +32,7 @@ end
 
 But what if we already have a scope in `BlogCategory` that we'd like to use?
 
-{% highlight ruby linenos=table %}
+{% highlight ruby %}
 
 class BlogCategory < ActiveRecord::Base
   belongs_to :blog
@@ -44,7 +44,7 @@ end
 
 Here comes `merge` to the rescue. We can just change our `Blog` model to use the scope.
 
-{% highlight ruby linenos=table %}
+{% highlight ruby %}
 
 class Blog < ActiveRecord::Base
   has_many :blog_categories
@@ -56,7 +56,7 @@ end
 
 Caveat: if the `Blog` and `BlogCategory` models both have the same attribute (say `category`), and you are using pure string conditions in your where clause like this
 
-{% highlight ruby linenos=table %}
+{% highlight ruby %}
 class BlogCategory < ActiveRecord::Base
 
   scope :not_consumer, -> { where("category != 'consumer'") }
@@ -66,7 +66,7 @@ end
 
 and our `Blog` is using that scope,
 
-{% highlight ruby linenos=table %}
+{% highlight ruby %}
 class Blog < ActiveRecord::Base
   has_many :blog_categories
 
@@ -78,7 +78,7 @@ then trying to use `Blog.for_non_consumers` will give us an `ActiveRecord ambigu
 
 In order to fix that, make sure to explicitly define which model is supposed to use that column:
 
-{% highlight ruby linenos=table %}
+{% highlight ruby %}
 class BlogCategory < ActiveRecord::Base
 
   scope :not_consumer, -> { where("blog_categories.category != 'consumer'") }
