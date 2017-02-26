@@ -6,43 +6,41 @@
     <title>{{ page.title }}</title>
     <meta name="viewport" content="width=device-width">
     <link href='http://fonts.googleapis.com/css?family=Lato:700|Lora' rel='stylesheet' type='text/css'>
-
     <!-- syntax highlighting CSS -->
     <link rel="stylesheet" href="/css/syntax.css">
-
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
-
   </head>
 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-42626537-1', 'germanvelasco.com');
-    ga('send', 'pageview');
-  </script>
-
   <body>
-    <div id="header">
-      <img class="profile-img" src="{{site.url}}/images/gv_sib_cartoon.png" alt="profile image">
-      <div class="container">
-        <h1 class="header-title"><a href="/">{{ site.name }}</a></h1>
-        <a class="header-subtitle" href="/">Software Developer</a>
-        <span class="social-media-btns">
-          <a class="social-media-btn" href="http://twitter.com/germsvel" target="_blank" title="German's twitter"><img src="{{site.url}}/images/glyphicons_411_twitter.png"></a>
-          <a class="social-media-btn" href="http://github.com/germsvel" target="_blank" title="German's github repo"><img src="{{site.url}}/images/glyphicons_401_github.png"></a>
-          <a class="social-media-btn" href="http://www.linkedin.com/pub/german-velasco/40/188/702/" target="_blank" title="German's LinkedIn"><img src="{{site.url}}/images/glyphicons_397_linked_in.png"></a>
-        </span>
-      </div>
-    </div>
+    <header>
+      <h1 class="header-title"><a href="/">{{ site.name }}</a></h1>
+      <span class="header-subtitle" href="/">Software Developer</span>
+      <span class="social-media-btns">
+        <a class="social-media-btn" href="http://twitter.com/germsvel" target="_blank" title="German's twitter"><img src="{{site.url}}/images/social/twitter.png"></a>
+        <a class="social-media-btn" href="http://github.com/germsvel" target="_blank" title="German's github repo"><img src="{{site.url}}/images/social/github.png"></a>
+        <a class="social-media-btn" href="http://www.linkedin.com/pub/german-velasco/40/188/702/" target="_blank" title="German's LinkedIn"><img src="{{site.url}}/images/social/linkedin.png"></a>
+      </span>
+    </header>
 
-    <div id="maincontent">
+    <main>
+      {{ content }}
+    </main>
 
-        {{ content }}
+    <footer>
+      <small>
+        &copy; <time datetime="{{ site.time | date_to_xmlschema }}">{{ site.time | date: '%Y' }}</time>. All rights reserved.
+      </small>
+    </footer>
 
-    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-42626537-1', 'germanvelasco.com');
+      ga('send', 'pageview');
+    </script>
   </body>
 </html>
