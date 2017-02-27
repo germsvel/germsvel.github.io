@@ -49,6 +49,20 @@
   color: #1E81B6;
 }
 
+footer ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.footer-section {
+  & a {
+    padding-right: 6rem;
+    padding-left: 6rem;
+  }
+}
+
 .post {
   max-width: 696px;
   margin-right: auto;

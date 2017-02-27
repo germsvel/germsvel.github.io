@@ -6,16 +6,13 @@
     <title>{{ page.title }}</title>
     <meta name="viewport" content="width=device-width">
     <link href='http://fonts.googleapis.com/css?family=Lato:700|Lora' rel='stylesheet' type='text/css'>
-    <!-- syntax highlighting CSS -->
-    <link rel="stylesheet" href="/css/syntax.css">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
   </head>
 
   <body>
     <header>
       <h1 class="header-title"><a href="/">{{ site.name }}</a></h1>
-      <span class="header-subtitle" href="/">Software Developer</span>
+      <span class="header-subtitle">Software Developer</span>
       <span class="social-media-btns">
         <a class="social-media-btn" href="http://twitter.com/germsvel" target="_blank" title="German's twitter"><img src="{{site.url}}/images/social/twitter.png"></a>
         <a class="social-media-btn" href="http://github.com/germsvel" target="_blank" title="German's github repo"><img src="{{site.url}}/images/social/github.png"></a>
@@ -28,9 +25,16 @@
     </main>
 
     <footer>
-      <small>
-        &copy; <time datetime="{{ site.time | date_to_xmlschema }}">{{ site.time | date: '%Y' }}</time>. All rights reserved.
-      </small>
+      <ul>
+        <li class="footer-section">
+          <a title="Home" href="/">Back home</a>
+        </li>
+        <li class="footer-section">
+          <small>
+            &copy; <time datetime="{{ site.time | date_to_xmlschema }}">{{ site.time | date: '%Y' }}</time> German Velasco.
+          </small>
+        </li>
+      </ul>
     </footer>
 
     <script>
