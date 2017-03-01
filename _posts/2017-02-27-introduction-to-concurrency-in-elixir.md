@@ -16,15 +16,12 @@ They are lightweight, and you can have thousands of them running concurrently.
 
 ## Creating processes
 
-In elixir we create new processes via,
-
-[`spawn/1`][spawn/1], [`spawn/3`][spawn/3], [`spawn_link/1`][spawn_link/1] and [`spawn_link/3`][spawn_link/3]
-
-each of which takes a function (anonymous or in a module) that will run in the new process.
-
-* `spawn` creates a new process completely isolated from the one creating it.
-* `spawn_link`, on the other hand, creates a link between the creating process and the created process.
-We'll talk more about links further down below.
+In elixir we create new processes via [`spawn/1`][spawn/1], [`spawn/3`][spawn/3],
+[`spawn_link/1`][spawn_link/1] and [`spawn_link/3`][spawn_link/3], each of which
+takes a function (anonymous or in a module) that will run in the new process.
+The `spawn` functions create a new process completely isolated from the one creating it.
+The `spawn_link` functions, on the other hand, create a link between the creating process
+and the created process. We'll talk more about links further down below.
 
 You can think of spawning a process as telling a process to run a function in isolation.
 That function may call other functions (like an http endpoint), or it may call itself
@@ -120,7 +117,7 @@ iex(1)> spawn_link(fn ->
 
 And you should see something like this,
 
-{% highlight shell %}
+{% highlight iex %}
 15:32:54.067 [error] Process #PID<0.109.0> raised an exception
 ** (RuntimeError) what are you doing!
   :erlang.apply/2
