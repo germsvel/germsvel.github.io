@@ -4,6 +4,7 @@ title:  "Merging an associated model's conditions into your scope"
 date:   2015-07-24 17:14:14
 categories: blog
 tags: Ruby, Rails, ActiveRecord
+published: false
 ---
 
 Everytime I want to create a Rails scope that uses an associated model's scopes I have to search for this particular method.
