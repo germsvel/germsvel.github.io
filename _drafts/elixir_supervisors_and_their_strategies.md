@@ -6,29 +6,33 @@ tags: Elixir, OTP
 ---
 
 A supervisor is an elixir process whose sole purpose is to watch other processes
-linked to it, trap exits, and watch for incoming messages that a process has
-failed. When a linked process fails, the supervisor can perform a number of things,
-such as starting a new process.
+linked to it, trap exits, watch for incoming messages that a process has
+failed, and respond appropriately. For example, when a linked process crashes, the
+supervisor can restart the crashed process, or it can kill and restart entire
+sections of our application. This is an extremely powerful way to handle errors
+in Elixir. It allows us to determine how much (or how little) we want errors to
+propagate across processes.
 
-This is an extremely powerful tool to handle errors in Elixir. When an error occurs,
-it can propagate only as far as we want, and then we can restart parts of the system
-to a clean state.
+With that knowledge in hand, we could roll up our own supervisors. All we would
+have to do is create processes that start children processes, link to them, trap
+exits, and respond to error messages. But it is far better to use OTP!
 
-This is the cornerstone of elixir's fault tolerance. Supervisors are able to kill
-and restart sections of an application.
+OTP gives us the following for free,
 
-## Supervisor Behaviour
+* It starts and runs the supervisor process.
+* The supervisor process traps exits.
+* From within the supervisor process, child processes are started and linked to
+   the supervisor process.
+* If a crash happens, the supervisor process receives an exit signal and
+   performs corrective actions, such as restarting the crashed process.
+* If a supervisor is terminated, child processes are terminated immediately.
 
-We could write our own supervisors by staring "child" processes with 'spawn_link',
-then 'trap_exit', and expecting error messages. But it is better to use the behaviour
-defined in Elixir. It ensures compatibility with OTP, and they have better error handling.
+And best of all, OTP makes it so easy for us!
 
-Like any other behavior in Elixir, we could use `@behaviour Supervisor`. But it is
-even better to use `use Supervisor`.
+## Supervisor Spec
 
-There are two ways to use the Supervisor behavior.
-
-### `import Supervisor.Spec`
+There are two ways to use define supervisors in elixir, the first one is the
+_dynamic_ way by using `import Supervisor.Spec` in any function.
 
 {% highlight elixir %}
 import Supervisor.Spec
@@ -40,17 +44,19 @@ children = [
 {:ok, pid} = Supervisor.start_link(children, strategy: :one_for_one)
 {% endhighlight %}
 
-By importing `Supervisor.Spec` we get a set of convenient functions to create the supervisor.
+By importing `Supervisor.Spec` we get a set of convenience functions
+for defining children (e.g. [`worker/2`][worker/2]). We can then start the
+supervisor by calling [`Supervisor.start_link/2`][start_link/2] and passing the
+children definition.
 
-### `use Supervisor`
+## Supervisor Behaviour
+
+The second way to create a supervisor is the module-based supervisor created via
+`use Supervisor`.
 
 {% highlight elixir %}
 defmodule SampleSup do
   use Supervisor
-
-  def start_link do
-    Supervisor.start_link(__MODULE__, [])
-  end
 
   def init(_) do
     children = [
@@ -62,29 +68,32 @@ defmodule SampleSup do
 end
 {% endhighlight %}
 
-By using `use Supervisor` (the module-based supervisor), we are able to create a supervisor
-with a name (in start_link), as well as perform additional actions during initialization.
-For example, we may want to set up an ETS table (redis like table) that would be related to
-our supervisors.
+By using `use Supervisor` (the module-based supervisor), we are able to perform additional
+actions during initialization since we use the `init/2` callback. For example, we
+may want to set up an ETS table (redis like table) where we could persist data
+related to the supervisor's children.
 
-This also allows you to perform partial hot-code swapping of the tree; eg. adding or removing
-children - module-based supervision will add and remove the children directly.
-Dynamic supervision (#1) would require the whole tree to be restarted in order to perform swaps.
+This also allows you to perform partial hot-code swapping of the supervision tree.
+In other words, in module-based supervision we could add and remove children directly,
+whereas dynamic supervision would require the whole tree to be restarted in
+order to perform swaps. Whichever method you use will depend on your needs.
 
-Whichever method you use will depend on your needs.
+The rest of the module-based supervisor is much like it's dynamic counterpart,
+where we define the children with convenience functions, but note that
+we use the [`supervise/2`][supervise/2] function instead of directly using
+`Supervisor.start_link`.
 
 ## Supervision Strategies
 
-Another great benefit of using OTP's Supervisor behavior is that we get some very interesting
-strategies for managing workers for free. Let's take a look at them.
+Another great benefit of using OTP's supervisors is that we get some very interesting
+strategies for managing workers. Let's take a look at them.
 
 ### :one_for_one
 
-The `:one_for_one` strategy is the easiest to understand. It simply means that
-if your supervisor supervises several processes and one goes down, only that one
-will be restarted.
+The `:one_for_one` strategy is the most intuitive strategy. If we have a supervisor _S_
+supervising several processes, _x_, _y_, and _z_, and _x_ goes down, only _x_ will be restarted.
 
-Let's take a look at a demo of :one_for_one supervision strategy. We will start a
+Let's take a look at a demo of `:one_for_one` supervision strategy. We will start a
 fake Bank application for our demo. If we run `mix new` with the `sup` flag,
 `mix` will create a project that gets automatically started with a supervisor,
 so let's do that. In the shell,
@@ -93,8 +102,32 @@ so let's do that. In the shell,
 mix new bank --sup
 {% endhighlight %}
 
-Now when `mix` starts an application, it will do so by calling the [`start/1`][start/1] function
-in a module using the `Application` behavior. And that's what we have in bank.ex.
+
+If you go to bank.ex, you should now see something like this (but with more comments),
+
+{% highlight elixir %}
+defmodule Bank do
+  use Application
+
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+
+    children = []
+  end
+
+  opts = [strategy: :one_for_one, name: Bank.Supervisor]
+  Supervisor.start_link(children, opts)
+end
+{% endhighlight %}
+
+When `mix` starts our Bank application, it will call that [`start/1`][start/1] function,
+since that module is using the `Application` behavior.
+
+As you can see, mix is using the `import Supervisor.Spec` because we'll just
+start a supervisor when the `mix` starts the application. The supervisor started, called
+`Bank.Supervisor` is the top level supervisor of our application.
+
+Let's define three children,
 
 {% highlight elixir %}
 defmodule Bank do
@@ -104,6 +137,9 @@ defmodule Bank do
     import Supervisor.Spec, warn: false
 
     children = [
+      supervisor(Bank.Account.Supervisor, []),
+      supervisor(Bank.Transfer.Supervisor, []),
+      worker(Bank.Loan.Processor, [])
     ]
   end
 
@@ -112,15 +148,20 @@ defmodule Bank do
 end
 {% endhighlight %}
 
-As you can see, we are using the `import Supervisor.Spec` because we'll just
-start a supervisor when the `mix` starts the application. The supervisor started, called
-`Bank.Supervisor` is the top level supervisor of our application.
-
-Let's provide three children for the demo. We use two convenience functions defined in
+We use two convenience functions defined in
 `Supervisor.Spec`, [`supervisor/2`][supervisor/2] and [`worker/2`][worker/2].
+Note that a supervisor can supervise both workers _and_ supervisors. In this
+way, we can build complex supervision trees where each part of our application
+is monitored by a process that can handle failures.
 
 Finally, we set the options with a `:one_for_one` strategy and call the
 [`Supervisor.start_link/2`][start_link/2] function passing the children and the options.
+
+Let's define some basic modules to stand in for our account supervisor, our transfer
+supervisor and for the loan processor.
+
+{% highlight elixir %}
+{% endhighlight %}
 
 Each process will put a message in the console when it is started, so that we can
 see when they are starting.
@@ -302,3 +343,4 @@ with `:temporary` restart strategy allowed me to do just that.
 [supervisor/2]: google.com
 [worker/2]: google.com
 [start_link/2]: google.com
+[supervise/2]: google.com
