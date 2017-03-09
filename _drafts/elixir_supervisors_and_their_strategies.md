@@ -84,27 +84,46 @@ The `:one_for_one` strategy is the easiest to understand. It simply means that
 if your supervisor supervises several processes and one goes down, only that one
 will be restarted.
 
-Let's take a look at a demo of :one_for_one supervision strategy.
+Let's take a look at a demo of :one_for_one supervision strategy. We will start a
+fake Bank application for our demo. If we run `mix new` with the `sup` flag,
+`mix` will create a project that gets automatically started with a supervisor,
+so let's do that. In the shell,
 
-We have a fake Bank application.
+{% highlight elixir %}
+mix new bank --sup
+{% endhighlight %}
 
-`mix` will call start an Application by calling the `start` function in a module using the `Application`
-behavior. And that's what we have here.
+Now when `mix` starts an application, it will do so by calling the [`start/1`][start/1] function
+in a module using the `Application` behavior. And that's what we have in bank.ex.
 
-[image of Bank.ex]
+{% highlight elixir %}
+defmodule Bank do
+  use Application
 
-As you can see, we are using the `import Supervisor.Spec` because we'll just start a supervisor when the
-`mix` starts the application.
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
 
-This is our top level supervisor.
+    children = [
+    ]
+  end
 
-We provide three children. And note, that we are using two convenience functions defined in `Supervisor.Spec`,
-namely `supervisor/2` and `worker/2`.
+  opts = [strategy: :one_for_one, name: Bank.Supervisor]
+  Supervisor.start_link(children, opts)
+end
+{% endhighlight %}
 
-Finally, we set the options with a `:one_for_one` strategy and call the `Supervisor.start_link/2`
-function passing the children and the options.
+As you can see, we are using the `import Supervisor.Spec` because we'll just
+start a supervisor when the `mix` starts the application. The supervisor started, called
+`Bank.Supervisor` is the top level supervisor of our application.
 
-Each process will put a message in the console when it is started, so that we can see when they are starting.
+Let's provide three children for the demo. We use two convenience functions defined in
+`Supervisor.Spec`, [`supervisor/2`][supervisor/2] and [`worker/2`][worker/2].
+
+Finally, we set the options with a `:one_for_one` strategy and call the
+[`Supervisor.start_link/2`][start_link/2] function passing the children and the options.
+
+Each process will put a message in the console when it is started, so that we can
+see when they are starting.
 
 Let's test it out.
 
@@ -277,3 +296,9 @@ into a single unified list. The catch was that linking the processes would cause
 the website failures to crash the entire search. Instead, I wanted to retrieve the results
 that I could and ignore the processes that failed. Using a `:simple_one_for_one` strategy
 with `:temporary` restart strategy allowed me to do just that.
+
+
+[start/1]: google.com
+[supervisor/2]: google.com
+[worker/2]: google.com
+[start_link/2]: google.com
