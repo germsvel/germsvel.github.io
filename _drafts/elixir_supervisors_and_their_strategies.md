@@ -45,7 +45,7 @@ children = [
 {% endhighlight %}
 
 By importing `Supervisor.Spec` we get a set of convenience functions
-for defining children (e.g. [`worker/2`][worker/2]). We can then start the
+for defining children (e.g. [`worker/3`][worker/3]). We can then start the
 supervisor by calling [`Supervisor.start_link/2`][start_link/2] and passing the
 children definition.
 
@@ -70,7 +70,7 @@ end
 
 By using `use Supervisor` (the module-based supervisor), we are able to perform additional
 actions during initialization since we use the `init/2` callback. For example, we
-may want to set up an ETS table (redis like table) where we could persist data
+may want to set up an ETS table where we could persist data
 related to the supervisor's children.
 
 This also allows you to perform partial hot-code swapping of the supervision tree.
@@ -120,11 +120,11 @@ defmodule Bank do
 end
 {% endhighlight %}
 
-When `mix` starts our Bank application, it will call that [`start/1`][start/1] function,
+When `mix` starts our Bank application, it will call that [`start/1`][start/1] function
 since that module is using the `Application` behavior.
 
 As you can see, mix is using the `import Supervisor.Spec` because we'll just
-start a supervisor when the `mix` starts the application. The supervisor started, called
+start a supervisor when the `mix` starts the application. The supervisor started named
 `Bank.Supervisor` is the top level supervisor of our application.
 
 Let's define three children,
@@ -149,7 +149,7 @@ end
 {% endhighlight %}
 
 We use two convenience functions defined in
-`Supervisor.Spec`, [`supervisor/2`][supervisor/2] and [`worker/2`][worker/2].
+`Supervisor.Spec`, [`supervisor/3`][supervisor/3] and [`worker/3`][worker/3].
 Note that a supervisor can supervise both workers _and_ supervisors. In this
 way, we can build complex supervision trees where each part of our application
 is monitored by a process that can handle failures.
@@ -340,7 +340,7 @@ with `:temporary` restart strategy allowed me to do just that.
 
 
 [start/1]: google.com
-[supervisor/2]: google.com
-[worker/2]: google.com
+[supervisor/3]: https://hexdocs.pm/elixir/Supervisor.Spec.html#supervisor/3
+[worker/3]: https://hexdocs.pm/elixir/Supervisor.Spec.html#worker/3
 [start_link/2]: google.com
 [supervise/2]: google.com
