@@ -5,25 +5,27 @@ categories: blog
 tags: Elixir, OTP
 ---
 
-A supervisor is an elixir process whose sole purpose is to watch other processes
-linked to it, trap exits, watch for incoming messages that a process has
-failed, and respond appropriately. For example, when a linked process crashes, the
-supervisor can restart the crashed process, or it can kill and restart entire
-sections of our application. This is an extremely powerful way to handle errors
-in Elixir. It allows us to determine how much (or how little) we want errors to
-propagate across processes.
+Let's start by briefly answering the question,
 
-With that knowledge in hand, we could roll up our own supervisors. All we would
-have to do is create processes that start children processes, link to them, trap
-exits, and respond to error messages. But it is far better to use OTP!
+## What are Elixir Supervisors?
 
-OTP gives us the following for free,
+An elixir supervisor is a process whose sole purpose is to watch other processes
+linked to it (children), trap exits, watch for incoming messages that a process
+has failed, and respond appropriately. For example, when a linked process
+crashes, the supervisor can restart the crashed process, or it can kill and
+restart entire sections of our application. This is an extremely powerful way to
+handle errors in Elixir. It allows us to determine how much (or how little) we
+want errors to propagate across processes. (If none of that makes sense, take a
+quick look at the [introduction to concurrency][intro-to-concurrency] blog post
+I wrote a little while ago.)
 
-* It starts and runs the supervisor process.
+Though we could create supervisor processes from scratch, Elixir (and Erlang)
+give us everything we need in OTP! With OTP, we get the following for free,
+
+* Starting and running the supervisor process.
 * The supervisor process traps exits.
-* From within the supervisor process, child processes are started and linked to
-   the supervisor process.
-* If a crash happens, the supervisor process receives an exit signal and
+* Child processes are started and linked to the supervisor process.
+* When a crash happens, the supervisor process receives an exit signal and
    performs corrective actions, such as restarting the crashed process.
 * If a supervisor is terminated, child processes are terminated immediately.
 
@@ -34,7 +36,7 @@ And best of all, OTP makes it so easy for us!
 There are two ways to use define supervisors in elixir, the first one is the
 _dynamic_ way by using `import Supervisor.Spec` in any function.
 
-{% highlight elixir %}
+```elixir
 import Supervisor.Spec
 
 children = [
@@ -42,7 +44,7 @@ children = [
 ]
 
 {:ok, pid} = Supervisor.start_link(children, strategy: :one_for_one)
-{% endhighlight %}
+```
 
 By importing `Supervisor.Spec` we get a set of convenience functions
 for defining children (e.g. [`worker/2`][worker/2]). We can then start the
@@ -54,7 +56,7 @@ children definition.
 The second way to create a supervisor is the module-based supervisor created via
 `use Supervisor`.
 
-{% highlight elixir %}
+```elixir
 defmodule SampleSup do
   use Supervisor
 
@@ -66,7 +68,7 @@ defmodule SampleSup do
     supervise(children, strategy: :one_for_one)
   end
 end
-{% endhighlight %}
+```
 
 By using `use Supervisor` (the module-based supervisor), we are able to perform additional
 actions during initialization since we use the `init/2` callback. For example, we
@@ -98,14 +100,14 @@ fake Bank application for our demo. If we run `mix new` with the `sup` flag,
 `mix` will create a project that gets automatically started with a supervisor,
 so let's do that. In the shell,
 
-{% highlight elixir %}
+```shell
 mix new bank --sup
-{% endhighlight %}
+```
 
 
 If you go to bank.ex, you should now see something like this (but with more comments),
 
-{% highlight elixir %}
+```elixir
 defmodule Bank do
   use Application
 
@@ -118,7 +120,7 @@ defmodule Bank do
   opts = [strategy: :one_for_one, name: Bank.Supervisor]
   Supervisor.start_link(children, opts)
 end
-{% endhighlight %}
+```
 
 When `mix` starts our Bank application, it will call that [`start/1`][start/1] function,
 since that module is using the `Application` behavior.
@@ -129,7 +131,7 @@ start a supervisor when the `mix` starts the application. The supervisor started
 
 Let's define three children,
 
-{% highlight elixir %}
+```elixir
 defmodule Bank do
   use Application
 
@@ -146,7 +148,7 @@ defmodule Bank do
   opts = [strategy: :one_for_one, name: Bank.Supervisor]
   Supervisor.start_link(children, opts)
 end
-{% endhighlight %}
+```
 
 We use two convenience functions defined in
 `Supervisor.Spec`, [`supervisor/2`][supervisor/2] and [`worker/2`][worker/2].
@@ -160,8 +162,9 @@ Finally, we set the options with a `:one_for_one` strategy and call the
 Let's define some basic modules to stand in for our account supervisor, our transfer
 supervisor and for the loan processor.
 
-{% highlight elixir %}
-{% endhighlight %}
+```elixir
+modules here
+```
 
 Each process will put a message in the console when it is started, so that we can
 see when they are starting.
@@ -175,9 +178,9 @@ Supervisors, as well as the Loan Processor process.
 
 To get a better view of our supervision tree, let's take a look at what the erlang observer gives us,
 
-{% highlight elixir %}
+```shell
 :observer.start
-{% endhighlight %}
+```
 
 Notice that under applications, we can see our Bank application.
 And here is our supervision tree.
@@ -188,10 +191,10 @@ It supervises the Account supervisor, the transfer supervisor, and the loan proc
 
 Now, let's test our Bank application's fault-tolerance: say our transfer supervisor goes down.
 
-{% highlight elixir %}
+```elixir
 pid = Process.whereis(:bank_transfer_supervisor)
 Process.exit(pid, :kill)
-{% endhighlight %}
+```
 
 And now we see that the message that the Transfer Supervisor is starting comes in. Thus the Bank.Supervisor
 has successfully restarted our Transfer Supervisor.
@@ -236,17 +239,17 @@ parent to this process.
 
 Okay, so let's take a look at it in iex,
 
-{% highlight elixir %}
+```shell
 iex -S mix
-{% endhighlight %}
+```
 
 We see that once again all processes were started.
 
 Recall the supervision tree,
 
-{% highlight elixir %}
+```shell
 :observer.start
-{% endhighlight %}
+```
 
 We have the Top level supervisor, supervising two other supervisors and one worker.
 
@@ -257,18 +260,18 @@ of its siblings are terminated and restarted alongside this one.
 
 Let's see it in action:
 
-{% highlight elixir %}
+```shell
 pid = Process.whereis(:bank_loan_processor)
 
 Process.exit(pid, :kill)
-{% endhighlight %}
+```
 
 As we can see, no only was the `:bank_loan_processor` restarted but so were all the
 other processes. Excellent!
 
-{% highlight elixir %}
+```shell
 Process.whereis(:bank_loan_processor)
-{% endhighlight %}
+```
 
 ### :rest_for_one
 
@@ -292,25 +295,25 @@ So, let’s take a look at them in `iex`
 
 [transition (play video)]
 
-{% highlight elixir %}
+```shell
 iex -S mix
-{% endhighlight %}
+```
 
 Once again, we see that all of our processes are started in order.
 
 Now remember, `:rest_for_one` means that if Transfer.Supervisor terminates due to
 an error, everything after that supervisor will be restarted.
 
-{% highlight elixir %}
+```shell
 pid = Process.whereis(:bank_transfer_supervisor)
 Process.exit(pid, :kill)
-{% endhighlight %}
+```
 
 There we go. We see the two processes restarting (as well as their children)
 
-{% highlight elixir %}
+```shell
 pid = Process.whereis(:bank_transfer_supervisor)
-{% endhighlight %}
+```
 
 ### :simple_one_for_one
 
@@ -344,3 +347,4 @@ with `:temporary` restart strategy allowed me to do just that.
 [worker/2]: google.com
 [start_link/2]: google.com
 [supervise/2]: google.com
+[intro-to-concurrency]: {% link _posts/2017-02-27-introduction-to-concurrency-in-elixir.md %}
