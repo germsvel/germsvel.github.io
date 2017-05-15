@@ -29,7 +29,7 @@ give us everything we need in OTP! With OTP, we get the following for free,
    performs corrective actions, such as restarting the crashed process.
 * If a supervisor is terminated, child processes are terminated immediately.
 
-And best of all, OTP makes it so easy for us!
+And best of all, OTP makes it so easy for us! Let's take a look at how to use the supervisors that come with OTP.
 
 ## Supervisor Spec
 
@@ -47,7 +47,7 @@ children = [
 ```
 
 By importing `Supervisor.Spec` we get a set of convenience functions
-for defining children (e.g. [`worker/2`][worker/2]). We can then start the
+for defining children (e.g. [`worker/3`][worker/3]). We can then start the
 supervisor by calling [`Supervisor.start_link/2`][start_link/2] and passing the
 children definition.
 
@@ -70,9 +70,9 @@ defmodule SampleSup do
 end
 ```
 
-By using `use Supervisor` (the module-based supervisor), we are able to perform additional
+By using `use Supervisor`, we are able to perform additional
 actions during initialization since we use the `init/2` callback. For example, we
-may want to set up an ETS table (redis like table) where we could persist data
+may want to set up an ETS table where we could persist data
 related to the supervisor's children.
 
 This also allows you to perform partial hot-code swapping of the supervision tree.
@@ -81,14 +81,14 @@ whereas dynamic supervision would require the whole tree to be restarted in
 order to perform swaps. Whichever method you use will depend on your needs.
 
 The rest of the module-based supervisor is much like it's dynamic counterpart,
-where we define the children with convenience functions, but note that
+where we define the children with convenience functions, with the difference that
 we use the [`supervise/2`][supervise/2] function instead of directly using
-`Supervisor.start_link`.
+`Supervisor.start_link/2`.
 
 ## Supervision Strategies
 
 Another great benefit of using OTP's supervisors is that we get some very interesting
-strategies for managing workers. Let's take a look at them.
+strategies for managing children. Let's take a look at them.
 
 ### :one_for_one
 
@@ -115,18 +115,18 @@ defmodule Bank do
     import Supervisor.Spec, warn: false
 
     children = []
-  end
 
-  opts = [strategy: :one_for_one, name: Bank.Supervisor]
-  Supervisor.start_link(children, opts)
+    opts = [strategy: :one_for_one, name: Bank.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
 end
 ```
 
-When `mix` starts our Bank application, it will call that [`start/1`][start/1] function,
+When `mix` starts our Bank application, it will call that [`start/2`][start/2] function
 since that module is using the `Application` behavior.
 
 As you can see, mix is using the `import Supervisor.Spec` because we'll just
-start a supervisor when the `mix` starts the application. The supervisor started, called
+start a supervisor when the `mix` starts the application. The supervisor named
 `Bank.Supervisor` is the top level supervisor of our application.
 
 Let's define three children,
@@ -143,18 +143,17 @@ defmodule Bank do
       supervisor(Bank.Transfer.Supervisor, []),
       worker(Bank.Loan.Processor, [])
     ]
-  end
 
-  opts = [strategy: :one_for_one, name: Bank.Supervisor]
-  Supervisor.start_link(children, opts)
+    opts = [strategy: :one_for_one, name: Bank.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
 end
 ```
 
-We use two convenience functions defined in
-`Supervisor.Spec`, [`supervisor/2`][supervisor/2] and [`worker/2`][worker/2].
-Note that a supervisor can supervise both workers _and_ supervisors. In this
-way, we can build complex supervision trees where each part of our application
-is monitored by a process that can handle failures.
+Note that a supervisor can supervise both workers _and_ supervisors.
+To do this, we use two convenience functions defined in
+`Supervisor.Spec`, [`supervisor/3`][supervisor/3] and [`worker/3`][worker/3].
+Since supervisors can supervise other supervisors, OTP allows us to build complex supervision trees where each part of our application is monitored by a process that can handle failures.
 
 Finally, we set the options with a `:one_for_one` strategy and call the
 [`Supervisor.start_link/2`][start_link/2] function passing the children and the options.
@@ -163,18 +162,82 @@ Let's define some basic modules to stand in for our account supervisor, our tran
 supervisor and for the loan processor.
 
 ```elixir
-modules here
+defmodule Bank.Account.Supervisor do
+  use Supervisor
+
+  @name :bank_account_supervisor
+
+  def start_link do
+    Supervisor.start_link(__MODULE__, [], name: @name)
+  end
+
+  def start_child do
+    Supervisor.start_child(@name, [])
+  end
+
+  def init(_) do
+    children = [
+      worker(Bank.Account, [])
+    ]
+
+    IO.puts ">>> Starting bank account supervisor"
+    supervise(children, strategy: :one_for_one)
+  end
+end
 ```
 
-Each process will put a message in the console when it is started, so that we can
-see when they are starting.
+```elixir
+defmodule Bank.Transfer.Supervisor do
+  use Supervisor
+
+  @name :bank_transfer_supervisor
+
+  def start_link do
+    Supervisor.start_link(__MODULE__, [], name: @name)
+  end
+
+  def init(_) do
+    children = [
+      worker(Bank.Transfer, [])
+    ]
+
+    IO.puts ">>> Starting bank transfer supervisor"
+    supervise(children, strategy: :one_for_one)
+  end
+end
+```
+
+```elixir
+defmodule Bank.Loan.Processor do
+  use GenServer
+
+  @name :bank_loan_processor
+
+  def start_link do
+    IO.puts ">>> Starting bank loan processor"
+    GenServer.start_link(__MODULE__, [], name: @name)
+  end
+end
+```
+
+Each process will put a message in the console when it is started, and we will use that to verify that the supervision strategies are working as expected.
 
 Let's test it out.
 
-Open up `iex -S mix`.
+Open up `iex -S mix`,
 
-See how in the console we already see our Application starting, and along with it the Account and Transfer
-Supervisors, as well as the Loan Processor process.
+{% highlight bash %}
+$ iex -S mix
+
+>>> Starting bank account supervisor
+>>> Starting bank transfer supervisor
+>>> Starting bank loan processor
+
+iex>
+{% endhighlight %}
+
+In the console, we can already see our Application starting, and along with it the Account and Transfer
+Supervisors, as well as the Loan Processor.
 
 To get a better view of our supervision tree, let's take a look at what the erlang observer gives us,
 
@@ -182,22 +245,19 @@ To get a better view of our supervision tree, let's take a look at what the erla
 :observer.start
 ```
 
-Notice that under applications, we can see our Bank application.
-And here is our supervision tree.
+Under the applications tab, we can see our Bank application as well as the entire supervision tree.
 
-The top level is the Bank.Supervisor.
+We have the Bank.Supervisor as the top level supervisor. It supervises the Account supervisor, the Transfer supervisor, and the loan processor.
 
-It supervises the Account supervisor, the transfer supervisor, and the loan processor.
-
-Now, let's test our Bank application's fault-tolerance: say our transfer supervisor goes down.
+Now, for the moment we've been waiting for. Let's test our Bank application's fault-tolerance by taking the Transfer supervisor down.
 
 ```elixir
-pid = Process.whereis(:bank_transfer_supervisor)
-Process.exit(pid, :kill)
+iex> pid = Process.whereis(:bank_transfer_supervisor)
+iex> Process.exit(pid, :kill)
 ```
 
-And now we see that the message that the Transfer Supervisor is starting comes in. Thus the Bank.Supervisor
-has successfully restarted our Transfer Supervisor.
+It may not seem like much, but the message "Starting bank transfer supervisor" tells us that the Bank supervisor
+has successfully restarted our Transfer supervisor, and that is cool.
 
 ### :one_for_all
 
@@ -341,10 +401,10 @@ the website failures to crash the entire search. Instead, I wanted to retrieve t
 that I could and ignore the processes that failed. Using a `:simple_one_for_one` strategy
 with `:temporary` restart strategy allowed me to do just that.
 
-
-[start/1]: google.com
-[supervisor/2]: google.com
-[worker/2]: google.com
-[start_link/2]: google.com
-[supervise/2]: google.com
+[start/2]: https://hexdocs.pm/elixir/Application.html#start/2
+[supervisor/3]: https://hexdocs.pm/elixir/Supervisor.Spec.html#supervisor/3
+[worker/3]: https://hexdocs.pm/elixir/Supervisor.Spec.html#worker/3
+[start_link/2]: https://hexdocs.pm/elixir/Supervisor.html#start_link/2
+[supervise/2]: https://hexdocs.pm/elixir/Supervisor.Spec.html#supervise/2
+[elixir_concurrency]: http://www.germanvelasco.com/blog/2017/02/27/introduction-to-concurrency-in-elixir.html
 [intro-to-concurrency]: {% link _posts/2017-02-27-introduction-to-concurrency-in-elixir.md %}
