@@ -10,31 +10,34 @@ Let's start by briefly answering the question,
 ## What are Elixir Supervisors?
 
 An elixir supervisor is a process whose sole purpose is to watch other processes
-linked to it (children), trap exits, watch for incoming messages that a process
-has failed, and respond appropriately. For example, when a linked process
-crashes, the supervisor can restart the crashed process, or it can kill and
-restart entire sections of our application. This is an extremely powerful way to
-handle errors in Elixir. It allows us to determine how much (or how little) we
-want errors to propagate across processes. (If none of that makes sense, take a
+linked to it (children), watch for incoming messages that a process has failed,
+trap exits, and respond appropriately. For example, when a child process
+crashes, the supervisor can restart the child process, or it can kill and
+restart entire sections of our application. If none of that makes sense, take a
 quick look at the [introduction to concurrency][intro-to-concurrency] blog post
-I wrote a little while ago.)
+I wrote a little while ago.
+
+Using supervisors to manage entire sections of our application is an extremely
+powerful way to handle errors in Elixir. They allow us to determine how much (or
+how little) we want errors to propagate across processes. Indeed, supervisors
+are the foundation for Elixir's fault tolerance.
 
 Though we could create supervisor processes from scratch, Elixir (and Erlang)
-give us everything we need in OTP! With OTP, we get the following for free,
+give us everything we need in OTP! OTP will do the following for us,
 
-* Starting and running the supervisor process.
-* The supervisor process traps exits.
+* Start and run the supervisor process.
+* The supervisor process will traps exits.
 * Child processes are started and linked to the supervisor process.
 * When a crash happens, the supervisor process receives an exit signal and
    performs corrective actions, such as restarting the crashed process.
 * If a supervisor is terminated, child processes are terminated immediately.
 
-And best of all, OTP makes it so easy for us! Let's take a look at how to use the supervisors that come with OTP.
+And best of all, OTP makes it so easy for us! Let's take a look at how to define the supervisors that come with OTP.
 
 ## Supervisor Spec
 
-There are two ways to use define supervisors in elixir, the first one is the
-_dynamic_ way by using `import Supervisor.Spec` in any function.
+There are two ways to define supervisors in elixir. The first one is the
+_dynamic_ way by using `import Supervisor.Spec` in a function.
 
 ```elixir
 import Supervisor.Spec
@@ -46,10 +49,11 @@ children = [
 {:ok, pid} = Supervisor.start_link(children, strategy: :one_for_one)
 ```
 
-By importing `Supervisor.Spec` we get a set of convenience functions
-for defining children (e.g. [`worker/3`][worker/3]). We can then start the
-supervisor by calling [`Supervisor.start_link/2`][start_link/2] and passing the
-children definition.
+By importing `Supervisor.Spec` we get a set of convenience functions for
+defining children, such as [`worker/3`][worker/3] and
+[`supervisor/3`][supervisor/3], for definining the children processes.  We can
+then start the supervisor by calling [`Supervisor.start_link/2`][start_link/2]
+and passing the children definition.
 
 ## Supervisor Behaviour
 
@@ -71,7 +75,7 @@ end
 ```
 
 By using `use Supervisor`, we are able to perform additional
-actions during initialization since we use the `init/2` callback. For example, we
+actions during initialization in the `init/2` callback. For example, we
 may want to set up an ETS table where we could persist data
 related to the supervisor's children.
 
@@ -81,21 +85,19 @@ whereas dynamic supervision would require the whole tree to be restarted in
 order to perform swaps. Whichever method you use will depend on your needs.
 
 The rest of the module-based supervisor is much like it's dynamic counterpart,
-where we define the children with convenience functions, with the difference that
-we use the [`supervise/2`][supervise/2] function instead of directly using
+where we define the children with convenience functions and we pass those
+children definitions to a function. In the module-based supervisor, we use the
+[`supervise/2`][supervise/2] function instead of directly using
 `Supervisor.start_link/2`.
 
 ## Supervision Strategies
 
-Another great benefit of using OTP's supervisors is that we get some very interesting
-strategies for managing children. Let's take a look at them.
+OTP makes it easy to define supervisor processes along with its children. But a
+lot of the flexibility of supervision trees in Elixir come from the supervision
+strategies. Let's create a sample application with a supervisor so we can take a
+look at each supervision strategy in turn.
 
-### :one_for_one
-
-The `:one_for_one` strategy is the most intuitive strategy. If we have a supervisor _S_
-supervising several processes, _x_, _y_, and _z_, and _x_ goes down, only _x_ will be restarted.
-
-Let's take a look at a demo of `:one_for_one` supervision strategy. We will start a
+We will start a
 fake Bank application for our demo. If we run `mix new` with the `sup` flag,
 `mix` will create a project that gets automatically started with a supervisor,
 so let's do that. In the shell,
@@ -248,6 +250,13 @@ To get a better view of our supervision tree, let's take a look at what the erla
 Under the applications tab, we can see our Bank application as well as the entire supervision tree.
 
 We have the Bank.Supervisor as the top level supervisor. It supervises the Account supervisor, the Transfer supervisor, and the loan processor.
+
+### :one_for_one
+
+The `:one_for_one` strategy is the most intuitive strategy. If we have a supervisor _S_
+supervising several processes, _x_, _y_, and _z_, and _x_ goes down, only _x_ will be restarted.
+
+Let's take a look at a demo of `:one_for_one` supervision strategy.
 
 Now, for the moment we've been waiting for. Let's test our Bank application's fault-tolerance by taking the Transfer supervisor down.
 
