@@ -92,25 +92,25 @@ children definitions to a function. In the module-based supervisor, we use the
 
 ## Supervision Strategies
 
-OTP makes it easy to define supervisor processes along with its children. But a
-lot of the flexibility of supervision trees in Elixir come from the supervision
-strategies. Let's create a sample application with a supervisor so we can take a
-look at each supervision strategy in turn.
+OTP makes it easy to define supervisor processes along with its children. But
+what if we want to configure _whether_ the crashed processes get restarted? OTP
+has our back with supervision strategies. Let's create a sample application
+with a supervisor so we can take a look at each supervision strategy in turn.
 
-We will start a
-fake Bank application for our demo. If we run `mix new` with the `sup` flag,
+Let's start a sample application to test this. If we run `mix new` with the `sup` flag,
 `mix` will create a project that gets automatically started with a supervisor,
-so let's do that. In the shell,
+so let's do that with Monitor, our monitoring application (yes, I know. Lacks
+originality),
 
 ```shell
-mix new bank --sup
+mix new monitor --sup
 ```
 
-
-If you go to bank.ex, you should now see something like this (but with more comments),
+`cd` into monitor directory, and go to `lib/monitor.ex`. You should now see
+something like this (but with more comments),
 
 ```elixir
-defmodule Bank do
+defmodule Monitor do
   use Application
 
   def start(_type, _args) do
@@ -118,91 +118,76 @@ defmodule Bank do
 
     children = []
 
-    opts = [strategy: :one_for_one, name: Bank.Supervisor]
+    opts = [strategy: :one_for_one, name: Monitor.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
 ```
 
-When `mix` starts our Bank application, it will call that [`start/2`][start/2] function
+When `mix` starts our Monitor application, it will call that [`start/2`][start/2] function
 since that module is using the `Application` behavior.
 
 As you can see, mix is using the `import Supervisor.Spec` because we'll just
 start a supervisor when the `mix` starts the application. The supervisor named
-`Bank.Supervisor` is the top level supervisor of our application.
+`Monitor.Supervisor` is the top level supervisor of our application.
 
-Let's define three children,
+Let's define three children to test supervision strategies,
 
 ```elixir
-defmodule Bank do
+defmodule Monitor do
   use Application
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(Bank.Account.Supervisor, []),
-      supervisor(Bank.Transfer.Supervisor, []),
-      worker(Bank.Loan.Processor, [])
+      worker(Monitor.A, []),
+      worker(Monitor.B, []),
+      worker(Monitor.C, [])
     ]
 
-    opts = [strategy: :one_for_one, name: Bank.Supervisor]
+    opts = [strategy: :one_for_one, name: Monitor.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
 ```
 
-Note that a supervisor can supervise both workers _and_ supervisors.
-To do this, we use two convenience functions defined in
-`Supervisor.Spec`, [`supervisor/3`][supervisor/3] and [`worker/3`][worker/3].
-Since supervisors can supervise other supervisors, OTP allows us to build complex supervision trees where each part of our application is monitored by a process that can handle failures.
+Note that a supervisor can supervise both workers _and_ supervisors.  In our
+example, we will only use define workers for convenience.  But we could just as
+easily define a supervisor to be supervised with the
+[`supervisor/3`][supervisor/3] instead of [`worker/3`][worker/3].  Since
+supervisors can supervise other supervisors, OTP allows us to build complex
+supervision trees where each part of our application is monitored by a process
+that can handle failures.
 
-Finally, we set the options with a `:one_for_one` strategy and call the
-[`Supervisor.start_link/2`][start_link/2] function passing the children and the options.
+For now, ignore the fact that we pass the `:one_for_one` strategy to the
+[`Supervisor.start_link/2`][start_link/2] function. We will look at each
+strategy in turn below.
 
-Let's define some basic modules to stand in for our account supervisor, our transfer
-supervisor and for the loan processor.
+Let's define some basic modules to stand in for our children, `A`, `B`, and `C`.
 
 ```elixir
-defmodule Bank.Account.Supervisor do
-  use Supervisor
+defmodule Monitor.A do
+  use GenServer
 
-  @name :bank_account_supervisor
+  @name :bank_loan_processor
 
   def start_link do
-    Supervisor.start_link(__MODULE__, [], name: @name)
-  end
-
-  def start_child do
-    Supervisor.start_child(@name, [])
-  end
-
-  def init(_) do
-    children = [
-      worker(Bank.Account, [])
-    ]
-
-    IO.puts ">>> Starting bank account supervisor"
-    supervise(children, strategy: :one_for_one)
+    IO.puts ">>> Starting bank loan processor"
+    GenServer.start_link(__MODULE__, [], name: @name)
   end
 end
 ```
 
 ```elixir
 defmodule Bank.Transfer.Supervisor do
-  use Supervisor
 
-  @name :bank_transfer_supervisor
+  @name :bank_loan_processor
 
   def start_link do
-    Supervisor.start_link(__MODULE__, [], name: @name)
+    IO.puts ">>> Starting bank loan processor"
+    GenServer.start_link(__MODULE__, [], name: @name)
   end
-
-  def init(_) do
-    children = [
-      worker(Bank.Transfer, [])
-    ]
-
     IO.puts ">>> Starting bank transfer supervisor"
     supervise(children, strategy: :one_for_one)
   end
@@ -210,7 +195,7 @@ end
 ```
 
 ```elixir
-defmodule Bank.Loan.Processor do
+defmodule Monitor.C do
   use GenServer
 
   @name :bank_loan_processor
