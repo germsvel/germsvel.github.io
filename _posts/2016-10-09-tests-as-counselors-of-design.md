@@ -48,7 +48,6 @@ you that some of your classes are too coupled.
 
 {% highlight ruby %}
 RSpec.describe BlogPost, '#publish' do
-
   it 'publishes a blog post' do
     pages = Pages.create(20)
     Blog.create(pages)
@@ -63,7 +62,6 @@ RSpec.describe BlogPost, '#publish' do
 
     expect(post).to be_published
   end
-
 end
 {% endhighlight %}
 
@@ -101,7 +99,6 @@ are testing the following method,
 {% highlight ruby %}
 class Blog
   def cancel_post(post)
-
     case post.status
     when :published
       # do a
@@ -110,7 +107,6 @@ class Blog
     else
       # do c
     end
-
   end
 end
 {% endhighlight %}
@@ -119,7 +115,6 @@ Our spec file looks like this,
 
 {% highlight ruby %}
 RSpec.describe Blog, '#cancel_post' do
-
   context 'when post status is published' do
     it 'cannot be canceled' do
       # test here
@@ -221,13 +216,9 @@ This may seem normal to some, after all how many times have seen things like
 these in our code bases?
 
 {% highlight ruby %}
-
 blog = Blog.find(id: blog_id)
-
 blog.publish_articles
-
 blog.send_articles
-
 {% endhighlight %}
 
 
@@ -249,7 +240,6 @@ For example, we may see something like this,
 
 {% highlight ruby %}
 RSpec.describe Blog, '#slug' do
-
   it 'dynamically creates a slug from the author’s name' do
     blog = Blog.build
 
@@ -257,7 +247,6 @@ RSpec.describe Blog, '#slug' do
 
     expect(slug).to eq 'the-greatest-author-name'
   end
-
 end
 {% endhighlight %}
 
@@ -276,7 +265,6 @@ belongs in the `Author` class, and our test becomes a test of a public method,
 
 {% highlight ruby %}
 RSpec.describe Author, '#create_slug' do
-
   it 'dynamically creates a slug from the name' do
     author = Author.new
 
@@ -284,7 +272,6 @@ RSpec.describe Author, '#create_slug' do
 
     expect(slug).to eq 'the-greatest-author-name'
   end
-
 end
 {% endhighlight %}
 

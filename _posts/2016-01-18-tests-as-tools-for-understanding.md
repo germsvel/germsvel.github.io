@@ -7,7 +7,6 @@ tags: Ruby, RSpec, Testing
 excerpt: <p>When working on a feature, I often find pieces of code that I have not seen before. In order to better understand the class or method, I like to use tests as documentation and as a way to explore the code's functionality.</p>
 ---
 
-
 >> _This blog post is part of a series called **Test First Workflow** that came out of a talk I gave last year.
 I will write a separate blog post for each of the four ways I use tests in my workflow. This is part one._
 
@@ -29,9 +28,9 @@ The RSpec documentation format is very helpful for this. You can simply pass the
 As an example, let's look at some tests for the [factory girl](https://github.com/thoughtbot/factory_girl) gem.
 Having cloned the repo, we run the following spec,
 
-```
+{% highlight shell %}
 rspec spec/factory_girl/attribute_list_spec.rb -fd
-```
+{% endhighlight %}
 
 
 And we get the following,
@@ -98,7 +97,6 @@ So we might update our tests to look like this,
 
 {% highlight ruby %}
 describe BlogPost, '#publish' do
-
   it 'raises when post does not have a title' do
     post = BlogPost.new
 
@@ -128,7 +126,6 @@ So, I would update the tests to look like this,
 
 {% highlight ruby %}
 describe BlogPost, '#publish' do
-
   it 'raises when post does not have a title' do
     post = BlogPost.new
 
@@ -171,10 +168,3 @@ interface and its return values is an excellent way of doing that. In fact, havi
 method, making it easier to understand.
 
 In the next posts on this series, I will look at how tests help with design, implementation, and refactoring.
-
-
-
-
-
-
-
