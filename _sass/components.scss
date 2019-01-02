@@ -93,13 +93,13 @@
    Author's media queries
    ========================================================================== */
 
-@media only screen and (max-width: 646px) {
+@media only screen and (max-width: 640px) {
   .header-subtitle {
-    font-size: 16px;
+    font-size: $font-size-s;
   }
 
   .header-title {
-    font-size: 50px;
+    font-size: $font-size-l;
   }
 
   .center-image {
@@ -107,44 +107,9 @@
       width: 15em;
     }
   }
-}
 
-@media only screen and (max-width: 587px) {
   .social-media-btns {
     display: block;
-  }
-}
-
-
-@media only screen and (max-width: 534px) {
-  .heade-title {
-    font-size: 40px;
-  }
-}
-
-@media only screen and (max-width: 450px) {
-  .header-title {
-    font-size: 32px;
-  }
-
-  .social-media-btns img {
-    height: 22px;
-    width: 22px;
-  }
-}
-
-@media only screen and (max-width: 380px){
-  .header-subtitle {
-    font-size: 12px;
-  }
-
-  .header-title {
-    font-size: 26px;
-  }
-
-  .social-media-btns img {
-    height: 21px;
-    width: 21px;
   }
 }
 
