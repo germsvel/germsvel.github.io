@@ -9,7 +9,7 @@ title: German Velasco
       {% for post in site.posts %}
         <div class="post">
           {% if post.external_url %}
-            <h1 class='blog-post-title'><a href="{{ post.external_url }}">{{ post.title }}</a></h1>
+            <h1 class='blog-post-title'><a href="{{ post.external_url }}" ref="external">{{ post.title }}</a></h1>
           {% else %}
             <h1 class='blog-post-title'><a href="{{ post.url }}">{{ post.title }}</a></h1>
           {% endif %}

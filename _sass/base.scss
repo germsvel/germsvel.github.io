@@ -102,6 +102,12 @@ a {
   text-decoration: none;
 }
 
+a[ref="external"]:after {
+  content: url("/images/external-link.svg");
+  font-size: 50%;
+  margin-left: $spacing-s;
+}
+
 p {
   font-size: 100%;
   line-height: 170%;
