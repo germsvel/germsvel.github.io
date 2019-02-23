@@ -12,26 +12,19 @@ header {
   -ms-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
-  background: #1E81B6;
-  color: #fff;
+  background: $blue;
+  color: $lightest-grey;
   display: block;
-  font: 200 24px proxima-nova-1,proxima-nova-2,"Helvetica Neue",Helvetica,sans-serif;
-  padding: 36px;
-  text-shadow: 0 -1px 0 #014163;
+  font: 200 $font-size-xl proxima-nova-1,proxima-nova-2,"Helvetica Neue",Helvetica,sans-serif;
+  padding: $spacing-xl;
 }
 
 header a {
-  color: #fff;
+  color: $white;
   text-decoration: none;
 }
 
 footer {
-  margin: 1rem;
+  margin: $spacing-m;
   text-align: center;
-}
-
-@media only screen and (max-width: 380px){
-  header {
-    padding-left: 26px;
-  }
 }

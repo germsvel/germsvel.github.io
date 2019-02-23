@@ -2,6 +2,18 @@ $main-color: #1e81b6;  // change this color for further customization
 
 $bg-color: white; // background-color
 
+$blue: $main-color;
+$darkest-blue: darken($blue, 10%);
+$dark-blue: darken($blue, 5%);
+$light-blue: lighten($blue, 25%);
+$lightest-blue: lighten($blue, 50%);
+
+$grey: #333;
+$darkest-grey: darken($grey, 25%);
+$dark-grey: darken($grey, 15%);
+$light-grey: lighten($grey, 25%);
+$lightest-grey: lighten($grey, 70%);
+
 $text-color: #333; // #222
 $link-color: $main-color;
 $border-color: #e0e1e6;
@@ -9,11 +21,11 @@ $smoke-color: #fafafa;
 $main-blue: $main-color;
 $white: #fff;
 
-
 // Typography
 
 $font-family: 'Open Sans', sans-serif;
 $variant-family: 'Lora', Georgia, serif;
+$font-size-xl: 1.75em; // font-size on desktop type screens
 $font-size-l: 1.25em; // font-size on desktop type screens
 $font-size-m: $font-size-l * 0.9; // font-size under 942px wide screens
 $font-size-s: $font-size-l * 0.7; // font-size under 642px wide screens
