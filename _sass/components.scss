@@ -14,7 +14,7 @@
   width: 100%;
   text-align: center;
   margin-bottom: $spacing-xs;
-  font-size: $font-size-xl;
+  font-size: $font-size-l;
   font-weight: bold;
 }
 
@@ -46,13 +46,24 @@
   text-align: center;
 }
 
+.header {
+  background: $blue;
+  color: $white;
+  text-decoration: none;
+}
+
 .header-title {
   margin: 0;
-  color: $white;
+
+  a {
+    color: $white;
+    font-size: $font-size-l;
+  }
 }
 
 .header-subtitle {
-  font-weight: bold;
+  font-weight: 200;
+  font-size: $font-size-l;
 }
 
 .introduction {
@@ -76,9 +87,14 @@
   margin: 0;
   padding: 0;
   border: none;
+
+  a {
+    text-decoration: none;
+  }
 }
 
 .social-media-btns img {
+  margin-left: $spacing-s;
   opacity: .8;
   width: 1.8rem;
 }
@@ -95,7 +111,25 @@
    Author's media queries
    ========================================================================== */
 
+@media only screen and (max-width: 380px) {
+  .blog-post-title {
+    font-size: $font-size-m;
+  }
+
+  .header {
+    padding: $spacing-sm;
+  }
+
+  .post {
+    font-size: $font-size-s;
+  }
+}
+
 @media only screen and (max-width: 640px) {
+  .blog-post-title {
+    font-size: $font-size-l;
+  }
+
   .header-subtitle {
     font-size: $font-size-s;
   }
@@ -110,8 +144,8 @@
     }
   }
 
-  .social-media-btns {
-    display: block;
+  .post {
+    font-size: $font-size-m;
   }
 }
 

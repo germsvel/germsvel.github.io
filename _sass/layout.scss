@@ -12,16 +12,8 @@ header {
   -ms-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
-  background: $blue;
-  color: $lightest-grey;
   display: block;
-  font: 200 $font-size-xl proxima-nova-1,proxima-nova-2,"Helvetica Neue",Helvetica,sans-serif;
   padding: $spacing-xl;
-}
-
-header a {
-  color: $white;
-  text-decoration: none;
 }
 
 footer {
