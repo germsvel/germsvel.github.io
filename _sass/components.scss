@@ -73,11 +73,15 @@
   margin-right: auto;
 }
 
+.posts {
+  margin-top: $spacing-xl;
+}
+
 .post {
   max-width: $center-text-max-width - 1px;
   margin-right: auto;
   margin-left: auto;
-  margin-bottom: $spacing-xl + $spacing-l;
+  margin-bottom: $spacing-xl + $spacing-m;
   width: $center-text-width;
   padding-right: $spacing-s;
   padding-left: $spacing-s;
@@ -117,7 +121,7 @@
   }
 
   .header {
-    padding: $spacing-sm;
+    padding: $spacing-m;
   }
 
   .post {
