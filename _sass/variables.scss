@@ -24,11 +24,11 @@ $white: #fff;
 // Typography
 
 $font-family: 'Lato', 'sans-serif';
-$font-size-xl: 1.75em;
+$font-size-xxl: 1.75em;
+$font-size-xl: 1.50em;
 $font-size-l: 1.25em; // font-size on desktop type screens
 $font-size-m: $font-size-l * 0.9; // font-size under 942px wide screens
 $font-size-s: $font-size-l * 0.7; // font-size under 642px wide screens
-
 
 // Spacings
 
@@ -42,6 +42,5 @@ $spacing-xl: $spacing-l + $spacing-s;
 
 // Other sizes
 
-$center-text-max-width: 700px;
-$center-text-width: 90%;
-$introduction-text-width: 80%;
+$text-max-width: 668px;
+$text-width: 80%;

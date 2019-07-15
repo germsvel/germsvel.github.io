@@ -4,19 +4,17 @@ title: German Velasco
 ---
 
 <div class='container'>
-  <div id="row">
-    <div class="posts">
-      {% for post in site.posts %}
-        <div class="post">
-          {% if post.external_url %}
-            <h1 class='blog-post-title'><a href="{{ post.external_url }}" ref="external">{{ post.title }}</a></h1>
-          {% else %}
-            <h1 class='blog-post-title'><a href="{{ post.url }}">{{ post.title }}</a></h1>
-          {% endif %}
-          <div class='blog-post-date'>{{ post.date | date: "%B %d, %Y" }}</div>
-          <div class='blog-post-excerpt'>{{ post.excerpt }}</div>
-        </div>
-      {% endfor %}
-    </div>
+  <div class="posts">
+    {% for post in site.posts %}
+      <div class="post">
+        {% if post.external_url %}
+          <h1 class='blog-post-title'><a href="{{ post.external_url }}" ref="external">{{ post.title }}</a></h1>
+        {% else %}
+          <h1 class='blog-post-title'><a href="{{ post.url }}">{{ post.title }}</a></h1>
+        {% endif %}
+        <div class='blog-post-date'>{{ post.date | date: "%B %d, %Y" }}</div>
+        <div class='blog-post-excerpt'>{{ post.excerpt }}</div>
+      </div>
+    {% endfor %}
   </div>
 </div>
