@@ -11,9 +11,9 @@
 }
 
 .blog-post-title {
-  width: 100%;
   text-align: left;
   margin-bottom: $spacing-xs;
+  max-width: 100%;
   font-size: $font-size-xl;
   font-weight: bold;
 }
@@ -39,6 +39,10 @@
   margin: 0;
   padding: 0;
   text-align: center;
+}
+
+.full-image > img {
+  width: 100%;
 }
 
 .header-content {
@@ -69,7 +73,6 @@
 }
 
 .introduction {
-  width: $text-width;
   max-width: $text-max-width;
   margin-left: auto;
   margin-right: auto;
@@ -84,7 +87,6 @@
   margin-right: auto;
   margin-left: auto;
   margin-bottom: $spacing-xl + $spacing-m;
-  width: $text-width;
   padding-right: $spacing-s;
   padding-left: $spacing-s;
 }
@@ -142,12 +144,6 @@
 
   .header-title {
     font-size: $font-size-l;
-  }
-
-  .center-image {
-    img {
-      width: 15em;
-    }
   }
 
   .post {

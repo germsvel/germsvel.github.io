@@ -5,7 +5,7 @@ categories: blog
 tags: elixir plug framework
 ---
 
-[![elixir-daze-talk]({{ site.url }}/images/elixir-daze-talk.png)][youtube]
+[![elixir-daze-talk]({{ site.url }}/images/elixir-daze-talk.png)][youtube]{: .full-image}
 
 Earlier this month, I gave a talk at [ElixirDaze] in Denver, CO. The talk
 focused on the experience of building your own web framework in Elixir.
