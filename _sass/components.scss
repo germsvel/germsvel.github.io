@@ -8,12 +8,15 @@
 
 .blog-post-excerpt {
   clear: both;
+  max-width: $text-width;
 }
 
 .blog-post-title {
-  text-align: left;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   margin-bottom: $spacing-xs;
   max-width: 100%;
+  text-align: left;
 }
 
 .blog-post-title a {
@@ -43,12 +46,6 @@
   width: 100%;
 }
 
-.header-content {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: $text-max-width;
-}
-
 .header {
   background: $blue;
   color: $white;
@@ -56,18 +53,25 @@
   text-decoration: none;
 }
 
+.header-content {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $text-width;
+}
+
 .header-title {
   margin: 0;
 
   a {
     color: $white;
-    font-size: $font-size-l;
+    font-size: $font-size-xxl;
   }
 }
 
 .header-subtitle {
-  font-weight: 200;
-  font-size: $font-size-l;
+  font-size: $font-size-xl;
+  color: $lightest-blue;
+  align-items: baseline;
 }
 
 .introduction {
@@ -81,17 +85,17 @@
 }
 
 .post {
-  max-width: $text-max-width;
+  max-width: $text-width;
   margin-right: auto;
   margin-left: auto;
   margin-bottom: $spacing-xl + $spacing-m;
   padding-right: $spacing-s;
   padding-left: $spacing-s;
+  text-align: justify;
+  hyphens: auto;
 }
 
 .social-media-btns {
-  margin: 0;
-  padding: 0;
   border: none;
 
   a {
@@ -100,7 +104,7 @@
 }
 
 .social-media-btns img {
-  margin-left: $spacing-s;
+  margin-left: $spacing-xs;
   opacity: .8;
   width: 1.8rem;
 }
@@ -122,8 +126,12 @@
     font-size: $font-size-m;
   }
 
-  .header {
-    padding: $spacing-m;
+  .header-subtitle {
+    font-size: $font-size-m;
+  }
+
+  .header-title {
+    font-size: $font-size-m;
   }
 
   .post {
@@ -136,12 +144,18 @@
     font-size: $font-size-l;
   }
 
+  .header-content {
+    max-width: 25em;
+  }
+
   .header-subtitle {
-    font-size: $font-size-s;
+    font-size: $font-size-l;
   }
 
   .header-title {
-    font-size: $font-size-l;
+    a {
+      font-size: $font-size-xl;
+    }
   }
 
   .post {
