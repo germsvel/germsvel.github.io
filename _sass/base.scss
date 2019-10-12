@@ -1,85 +1,80 @@
-// Base rules: the defaults
+// Body resets
+//
+// Update the foundational and global aspects of the page.
 
-/*
- * HTML5 Boilerplate
- *
- * What follows is the result of much research on cross-browser styling.
- * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
- * Kroc Camen, and the H5BP dev community and team.
- */
-
-/* ==========================================================================
-   Base styles: opinionated defaults
-   ========================================================================== */
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
 
 html,
-button,
-input,
-select,
-textarea {
-  color: #454547;
-}
-
 body {
-  color: $grey;
-  font-family: $font-family;
-  font-size: $font-size-l;
-  line-height: 1.4;
-}
-
-/*
- * Remove text-shadow in selection highlight: h5bp.com/i
- * These selection rule sets have to be separate.
- * Customize the background color to match your design.
- */
-
-::-moz-selection {
-  background: #b3d4fc;
-  text-shadow: none;
-}
-
-::selection {
-  background: #b3d4fc;
-  text-shadow: none;
-}
-
-/*
- * A better looking default horizontal rule
- */
-
-hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: 1px solid #ccc;
-  margin: 1em 0;
-  padding: 0;
-}
-
-/*
- * Remove the gap between images and the bottom of their containers: h5bp.com/i/440
- */
-
-img {
-  vertical-align: middle;
-}
-
-/*
- * Remove default fieldset styles.
- */
-
-fieldset {
-  border: 0;
   margin: 0;
   padding: 0;
 }
 
-/*
- * Allow only vertical resizing of textareas.
- */
+html {
+  font-family: $root-font-family;
+  font-size: $root-font-size;
+  line-height: $root-line-height;
 
-textarea {
-  resize: vertical;
+  @media (min-width: $large-breakpoint) {
+    font-size: $large-font-size;
+  }
+}
+
+body {
+  color: $body-color;
+  background-color: $body-bg;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+}
+
+// No `:visited` state is required by default (browsers will use `a`)
+a {
+  color: $link-color;
+  text-decoration: none;
+
+  // `:focus` is linked to `:hover` for basic accessibility
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+
+  strong {
+    color: inherit;
+  }
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  margin: 0 0 1rem;
+  border-radius: 5px;
+}
+
+table {
+  margin-bottom: 1rem;
+  width: 100%;
+  font-size: 85%;
+  border: 1px solid #e5e5e5;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  padding: .25rem .5rem;
+  border: 1px solid #e5e5e5;
+}
+
+th {
+  text-align: left;
+}
+
+tbody tr:nth-child(odd) td,
+tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
 }
 
 /* ==========================================================================
@@ -97,37 +92,10 @@ textarea {
    Author's custom base styles
    ========================================================================== */
 
-a {
-  background-color: inherit;
-  color: $blue;
-  text-decoration: none;
-}
-
 a[ref="external"]:after {
   content: url("/images/external-link.svg");
   font-size: 50%;
   margin-left: $spacing-s;
-}
-
-p {
-  font-size: 100%;
-  line-height: 170%;
-}
-
-p, li, ul, ol, span, div {
-}
-
-pre {
-  background-color: #122b3b;
-  font-family: 'Ubuntu Mono', 'Monaco', monospace;
-  padding: 10px;
-  line-height: 17px;
-}
-
-code {
-  background-color: inherit;
-  padding: 3px;
-  width: 100%;
 }
 
 /* ==========================================================================

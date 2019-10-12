@@ -7,9 +7,11 @@ tags: Ruby, RSpec, Testing
 excerpt: <p>When working on a feature, I often find pieces of code that I have not seen before. In order to better understand the class or method, I like to use tests as documentation and as a way to explore the code's functionality.</p>
 ---
 
->> _This blog post is part of a series called **Test First Workflow** that came out of a talk I gave last year.
-I will write a separate blog post for each of the four ways I use tests in my workflow. This is part one._
-
+<div class="message">
+  This blog post is part of a series called <em>Test First Workflow</em> that
+  came out of a talk I gave last year. I will write a separate blog post for
+  each of the four ways I use tests in my workflow. This is part one.
+</div>
 
 It was only recently that I realized just how much tests are an integral part of how I code.
 I use them constantly, allowing them to influence every stage of my workflow, so I thought I'd share some ways in which they help me.

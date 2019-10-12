@@ -3,3 +3,12 @@ highlighter: 'rouge'
 sass:
   sass_dir: _sass
   style: compressed
+
+title: German Velasco
+tagline: Software Developer
+url: http://germanvelasco.com
+baseurl: ""
+
+author:
+  name: German Velasco
+  url: https://twitter.com/germsvel

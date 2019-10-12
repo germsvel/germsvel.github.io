@@ -5,7 +5,12 @@
 // Imports
 @import "variables";
 @import "base";
+@import "type";
+@import "syntax";
+@import "code";
 @import "layout";
 @import "state";
-@import "components";
-@import "syntax";
+@import "header";
+@import "posts";
+@import "pagination";
+@import "message";
