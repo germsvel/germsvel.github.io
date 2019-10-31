@@ -12,7 +12,8 @@ excerpt: >
 
 <div class="message">
   This blog post was originally published in thoughtbot's blog. You can find the
-  original at <a>https://thoughtbot.com/blog/lets-not-misuse-refactoring</a>.
+  original at <a
+  href="https://thoughtbot.com/blog/lets-not-misuse-refactoring">thoughtbot.com/blog/lets-not-misuse-refactoring</a>.
 </div>
 
 
