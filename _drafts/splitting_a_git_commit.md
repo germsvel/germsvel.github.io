@@ -5,17 +5,15 @@ categories: git
 tags: git
 ---
 
-Usually my workflow involves squashing commits into a single one: I have a
-feature branch, I commit as I hit stopping points, and before opening a
-pull-request, I squash all commits into a single one (with a good message of
-course!). But sometimes, the workflow calls for the opposite action &mdash;
-splitting a single commit into many. When I need that, this is how I do it.
+My workflow usually involves squashing many commits into a single one (and
+adding a really good message of course!) But sometimes, the workflow calls for
+the opposite action &mdash; splitting a single commit into many. When I need
+that, this is how I do it.
 
 ## Rebase, edit, split, commit
 
-I first rebase my branch interactively. I like to keep my branch up to date with
-the latest and greatest, so I'll go ahead and fetch and rebase from `master`
-while I'm at it.
+I first do an interactive rebase. I like to keep my branch up to date with the
+latest and greatest, so I'll go ahead and fetch and rebase from `master`.
 
 ```
 $ git fetch
@@ -58,10 +56,9 @@ edit c415f9e Adds greeting to application
 # d, drop = remove commit
 ```
 
-Saving that, we should now be in an editable state.
+Save that. We should now be in an editable state:
 
 ```
-$ git rebase -i origin/master
 Stopped at c415f9e...  Adds greeting to application
 You can amend the commit now, with
 
@@ -72,9 +69,9 @@ Once you are satisfied with your changes, run
   git rebase --continue
 ```
 
-The output tells us we can amend the commit message with `--amend` or we can
-continue with the rebase, but it doesn't tell you about the secret third option:
-to change the commit!
+The output tells us we can amend the commit message with `git commit --amend` or
+we can continue with `git rebase --continue`, but it doesn't tell you about the
+secret third option &mdash; to change the commit! Enter `git reset`:
 
 ```
 $ git reset HEAD^
@@ -84,34 +81,34 @@ M       app/models/application_record.rb
 M       app/views/layouts/application.html.erb
 ```
 
-Finally! We now see that we have unstaged changes. If you type in `git status`,
-you should see the very familiar look of unstaged files before you commit.
+Excellent! We now have unstaged changes. If you type in `git status`, you should
+see the very familiar look of unstaged files before you commit.
 
-We can now choose to add however many commits we want. Suppose (for the sake of
-this exercise) that you wanted to add the views, controllers, and models in
-separate commits.
+We can now choose to add files in as many commits as we want. Suppose (for the
+sake of this exercise) that we want to add the views, controllers, and models
+in separate commits.
 
 ```
 # first commit
 $ git add app/views
-$ git ci -m 'add views'
+$ git commit -m 'add views'
 [detached HEAD b5a0719] add views
  1 file changed, 1 insertion(+)
 
 # second commit
 $ git add app/controllers
-$ git ci -m 'add controllers'
+$ git commit -m 'add controllers'
 [detached HEAD bb7b50e] add controllers
  1 file changed, 5 insertions(+)
 
 # third commit
 $ git add app/models
-$ git ci -m 'add models'
+$ git commit -m 'add models'
 [detached HEAD ec6c1e7] add models
  1 file changed, 4 insertions(+)
 ```
 
-Now that we're satisfied with our new commits, we can continue with the rebase:
+Now that we're satisfied with our new commits, we can continue the rebase:
 
 ```
 $ git rebase --continue
@@ -126,8 +123,10 @@ bb7b50e add controllers
 b5a0719 add views
 ```
 
-## What next?
+## You like to rewrite history?
 
-You like to rewrite history? Me too. Take a look at the [Rewriting History] docs.
+If you like to rewrite history, take a look at the [Rewriting History] docs and
+this [wonderful blog post].
 
 [Rewriting History]: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History
+[wonderful blog post]: https://thoughtbot.com/blog/git-interactive-rebase-squash-amend-rewriting-history
