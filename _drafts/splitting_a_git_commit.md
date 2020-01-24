@@ -12,17 +12,17 @@ that, this is how I do it.
 
 ## Rebase, edit, split, commit
 
-I first do an interactive rebase. I like to keep my branch up to date with the
+Let's first do an interactive rebase. I like to keep my branch up to date with the
 latest and greatest, so I'll go ahead and fetch and rebase from `master`.
 
-```
+```shell
 $ git fetch
 $ git rebase -i origin/master
 ```
 
 We will be given a choice of what to do with our commits.
 
-```
+```shell
 pick c415f9e Adds greeting to application
 
 # Rebase e42f496..c415f9e onto e42f496 (1 command)
@@ -37,11 +37,10 @@ pick c415f9e Adds greeting to application
 # d, drop = remove commit
 ```
 
-In this case, we only
-have one (`c415f93`), and we want to edit it. So change `pick` to `edit` (or
-just `e`).
+In this case, we only have one commit (`c415f93`), and we want to edit it. So
+change `pick` to `edit` (or just `e`).
 
-```
+```shell
 edit c415f9e Adds greeting to application
 
 # Rebase e42f496..c415f9e onto e42f496 (1 command)
@@ -58,7 +57,7 @@ edit c415f9e Adds greeting to application
 
 Save that. We should now be in an editable state:
 
-```
+```shell
 Stopped at c415f9e...  Adds greeting to application
 You can amend the commit now, with
 
@@ -71,9 +70,9 @@ Once you are satisfied with your changes, run
 
 The output tells us we can amend the commit message with `git commit --amend` or
 we can continue with `git rebase --continue`, but it doesn't tell you about the
-secret third option &mdash; to change the commit! Enter `git reset`:
+secret third option &mdash; to change the commit with `git reset HEAD^`!
 
-```
+```shell
 $ git reset HEAD^
 Unstaged changes after reset:
 M       app/controllers/application_controller.rb
@@ -81,14 +80,14 @@ M       app/models/application_record.rb
 M       app/views/layouts/application.html.erb
 ```
 
-Excellent! We now have unstaged changes. If you type in `git status`, you should
+Excellent! We now have unstaged changes. If you type `git status`, you should
 see the very familiar look of unstaged files before you commit.
 
 We can now choose to add files in as many commits as we want. Suppose (for the
 sake of this exercise) that we want to add the views, controllers, and models
 in separate commits.
 
-```
+```shell
 # first commit
 $ git add app/views
 $ git commit -m 'add views'
@@ -108,25 +107,26 @@ $ git commit -m 'add models'
  1 file changed, 4 insertions(+)
 ```
 
-Now that we're satisfied with our new commits, we can continue the rebase:
+Now that we're satisfied with our new commits, we can continue with the rebase:
 
-```
+```shell
 $ git rebase --continue
 Successfully rebased and updated refs/heads/splitting-commit.
 ```
 And voilà! You now have three commits instead of one.
 
-```
+```shell
 $ git log --oneline --decorate -3
 ec6c1e7 (HEAD -> splitting-commit) add models
 bb7b50e add controllers
 b5a0719 add views
 ```
 
-## You like to rewrite history?
+## What next?
 
-If you like to rewrite history, take a look at the [Rewriting History] docs and
-this [wonderful blog post].
+Do you like to rewrite history? I do, too! Take a look at the [Rewriting
+History] docs and this [wonderful blog post] for the many ways of rewriting
+history.
 
 [Rewriting History]: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History
 [wonderful blog post]: https://thoughtbot.com/blog/git-interactive-rebase-squash-amend-rewriting-history
