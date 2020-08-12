@@ -5,7 +5,7 @@ date: 2020-08-11
 categories: blog
 tags: tdd, bdd, phoenix, elixir, book, tutorial
 excerpt: >
-  I've been writing <a href="https://www.tddphoenix.com">TDD Phoenix</a> book.
+  I've been writing a <a href="https://www.tddphoenix.com">TDD Phoenix</a> book.
   It's still a work in progress, but it's freely available online. This is a
   short update on progress and plans.
 ---
